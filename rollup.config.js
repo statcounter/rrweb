@@ -3,6 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
+import prettier from 'rollup-plugin-prettier';
 import pkg from './package.json';
 
 function toRecordPath(path) {
@@ -19,7 +20,7 @@ let configs = [
   // browser(record only)
   {
     input: './src/record/index.ts',
-    plugins: [resolve(), commonjs(), typescript()],
+    plugins: [resolve(), commonjs(), typescript(), prettier()],
     output: [
       {
         name: 'rrwebRecord',
@@ -84,6 +85,7 @@ let configs = [
         extract: false,
         inject: false,
       }),
+      prettier(),
     ],
     output: [
       {
