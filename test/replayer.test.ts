@@ -19,8 +19,7 @@ interface ISuite extends Suite {
 }
 
 describe('replayer', function (this: ISuite) {
-  this.timeout(10_000);
-
+  this.timeout(5_000);
   before(async () => {
     this.browser = await launchPuppeteer();
 
