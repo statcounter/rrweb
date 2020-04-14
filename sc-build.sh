@@ -1,3 +1,4 @@
+npm install  # in case any packages have been updated upstream
 cd rrweb-snapshot
 npm run bundle && dos2unix dist/*
 cd -
