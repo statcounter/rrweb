@@ -1,9 +1,2 @@
 npm install  # in case any packages have been updated upstream
-cd rrweb-snapshot
-npm run bundle && dos2unix dist/*
-cd -
-npm run bundle:browser-record && dos2unix dist/record/* dist/*
-cp -f /home/statcounter/rrweb/dist/rrweb.js /home/statcounter/www/libs/rrweb/rrweb.js
-cp -f /home/statcounter/rrweb/dist/rrweb.min.js /home/statcounter/www/libs/rrweb/rrweb.min.js
-cp -f /home/statcounter/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js
-cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js /home/statcounter/www/libs/rrweb/rrweb-record.min.js
+./sc-build-no-upstream.sh  # for incremental builds where we no there's been no npm changes
