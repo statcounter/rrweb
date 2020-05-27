@@ -4,6 +4,7 @@ node_js:
   - 12
 
 install:
+  - git clone --depth=1 --branch=master https://github.com/statcounter/rrweb-snapshot.git
   - yarn
 
 script:
