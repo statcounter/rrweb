@@ -12,7 +12,7 @@ interface ISuite extends Suite {
 }
 
 describe('record integration tests', function (this: ISuite) {
-  this.timeout(10_000);
+  this.timeout(30_000);
 
   const getHtml = (
     fileName: string,
