@@ -1,2 +1,4 @@
 import { observerParam, listenerHandler, hooksParam } from '../types';
-export default function initObservers(o: observerParam, hooks?: hooksParam): listenerHandler;
+import MutationBuffer from './mutation';
+export declare const mutationBuffer: MutationBuffer;
+export declare function initObservers(o: observerParam, hooks?: hooksParam): listenerHandler;

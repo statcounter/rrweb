@@ -32,6 +32,8 @@ import {
 } from '../types';
 import MutationBuffer from './mutation';
 
+export const mutationBuffer = new MutationBuffer();
+
 function initMutationObserver(
   cb: mutationCallBack,
   blockClass: blockClass,
@@ -39,12 +41,7 @@ function initMutationObserver(
   maskAllInputs: boolean,
 ): MutationObserver {
   // see mutation.ts for details
-  const mutationBuffer = new MutationBuffer(
-    cb,
-    blockClass,
-    inlineStylesheet,
-    maskAllInputs,
-  );
+  mutationBuffer.init(cb, blockClass, inlineStylesheet, maskAllInputs);
   const observer = new MutationObserver(mutationBuffer.processMutations);
   observer.observe(document, {
     attributes: true,
@@ -405,7 +402,7 @@ function mergeHooks(o: observerParam, hooks: hooksParam) {
   };
 }
 
-export default function initObservers(
+export function initObservers(
   o: observerParam,
   hooks: hooksParam = {},
 ): listenerHandler {

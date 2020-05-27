@@ -1,5 +1,6 @@
 import { mutationRecord, blockClass, mutationCallBack } from '../types';
 export default class MutationBuffer {
+    paused: boolean;
     private texts;
     private attributes;
     private removes;
@@ -12,9 +13,9 @@ export default class MutationBuffer {
     private blockClass;
     private inlineStylesheet;
     private maskAllInputs;
-    constructor(cb: mutationCallBack, blockClass: blockClass, inlineStylesheet: boolean, maskAllInputs: boolean);
-    processMutations(mutations: mutationRecord[]): void;
+    init(cb: mutationCallBack, blockClass: blockClass, inlineStylesheet: boolean, maskAllInputs: boolean): void;
+    processMutations: (mutations: mutationRecord[]) => void;
     private processMutation;
     private genAdds;
-    emit(): void;
+    emit: () => void;
 }
