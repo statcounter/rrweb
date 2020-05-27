@@ -5,6 +5,10 @@ node_js:
 
 install:
   - git clone --depth=1 --branch=master https://github.com/statcounter/rrweb-snapshot.git
+  - cd rrweb-snapshot
+  - npm install
+  - npm run bundle
+  - cd ..
   - yarn
 
 script:
