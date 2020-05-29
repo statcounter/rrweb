@@ -101,6 +101,8 @@ export declare type recordOptions<T> = {
     hooks?: hooksParam;
     mousemoveWait?: number;
     packFn?: PackFn;
+    autoFreezeOnBlur?: boolean;
+    autoFreezeAfterSeconds?: number;
 };
 export declare type observerParam = {
     mutationCb: mutationCallBack;

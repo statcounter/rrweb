@@ -39,6 +39,8 @@ function record<T = eventWithTime>(
     hooks,
     mousemoveWait = 50,
     packFn,
+    autoFreezeOnBlur = false,
+    autoFreezeAfterSeconds = -1,
   } = options;
   // runtime checks for user options
   if (!emit) {

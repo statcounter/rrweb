@@ -137,6 +137,8 @@ export type recordOptions<T> = {
   hooks?: hooksParam;
   mousemoveWait?: number;
   packFn?: PackFn;
+  autoFreezeOnBlur?: boolean,
+  autoFreezeAfterSeconds?: number,
 };
 
 export type observerParam = {
