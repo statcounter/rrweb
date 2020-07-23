@@ -141,6 +141,12 @@ function getPlugins(options = {}) {
 }
 
 for (const c of baseConfigs) {
+
+  if (c.name !== 'rrwebReplay' && c.name !== 'rrwebRecord') {
+    // statcounter: we are not interested in all-in-one outputs
+    continue;
+  }
+
   const basePlugins = [
     resolve({ browser: true }),
 
@@ -153,6 +159,7 @@ for (const c of baseConfigs) {
 
     typescript(),
   ];
+
   const plugins = basePlugins.concat(
     postcss({
       extract: false,
