@@ -144,6 +144,11 @@ for (const c of baseConfigs) {
   });
 }
 
+configs = configs.filter(function(c){
+  // statcounter: we are not interested in pako.js
+  return c.input.indexOf('pack.ts') === -1;
+});
+
 if (process.env.BROWSER) {
   configs = configs.filter(function(c){
     var is_browser = c.output[0].format == 'iife';
