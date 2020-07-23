@@ -212,6 +212,11 @@ for (const c of baseConfigs) {
   }
 }
 
+configs = configs.filter(function(c){
+  // statcounter: we are not interested in pako.js
+  return c.input.indexOf('pack.ts') === -1;
+});
+
 if (process.env.BROWSER_ONLY) {
   const browserOnlyBaseConfigs = [
     {
