@@ -154,13 +154,13 @@ if (process.env.BROWSER) {
     }
   });
 }
-if (process.env.PACKED) {
+if (process.env.MINIFIED) {
   configs = configs.filter(function(c){
-    var is_packed = c.output[0].file.endsWith('.min.js');
-    if (process.env.PACKED === 'suppress') {
-      return !is_packed;
+    var is_minified = c.output[0].file.endsWith('.min.js');
+    if (process.env.MINIFIED === 'suppress') {
+      return !is_minified;
     } else {
-      return is_packed;
+      return is_minified;
     }
   });
 }
