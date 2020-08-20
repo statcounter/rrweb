@@ -5,6 +5,7 @@ import {
   throttle,
   on,
   hookSetter,
+  getTopWindow,
   getWindowHeight,
   getWindowWidth,
   isBlocked,
@@ -54,7 +55,8 @@ function initMutationObserver(
     recordCanvas,
   );
   const observer = new MutationObserver(mutationBuffer.processMutations);
-  observer.observe(document, {
+  const twindow = getTopWindow();
+  observer.observe(twindow.document, {
     attributes: true,
     attributeOldValue: true,
     characterData: true,
@@ -180,8 +182,9 @@ function initScrollObserver(
       return;
     }
     const id = mirror.getId(evt.target as INode);
-    if (evt.target === document) {
-      const scrollEl = (document.scrollingElement || document.documentElement)!;
+    const tdoc = getTopWindow().document;
+    if (evt.target === tdoc) {
+      const scrollEl = (tdoc.scrollingElement || tdoc.documentElement)!;
       cb({
         id,
         x: scrollEl.scrollLeft,
@@ -254,8 +257,9 @@ function initInputObserver(
     // if a radio was checked
     // the other radios with the same name attribute will be unchecked.
     const name: string | undefined = (target as HTMLInputElement).name;
+    const tdoc = getTopWindow().document;
     if (type === 'radio' && name && isChecked) {
-      document
+      tdoc
         .querySelectorAll(`input[type="radio"][name="${name}"]`)
         .forEach((el) => {
           if (el !== target) {
