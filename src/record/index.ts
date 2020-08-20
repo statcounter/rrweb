@@ -111,7 +111,8 @@ function record<T = eventWithTime>(
       isCheckout,
     );
     const [node, idNodeMap] = snapshot(
-      document,
+      window.top && window.top.document ?
+        window.top.document : document,
       blockClass,
       inlineStylesheet,
       maskInputOptions,
