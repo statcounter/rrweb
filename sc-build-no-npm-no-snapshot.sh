@@ -7,7 +7,12 @@ cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js /home/statcounter/
 RRWEBV=`git rev-parse HEAD`
 cd rrweb-snapshot
 RRWEBSV=`git rev-parse HEAD`
-cd -
+cd - &> /dev/null
 mkdir -p /home/statcounter/www/libs/rrweb/versioned
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.js "/home/statcounter/www/libs/rrweb/versioned/rrweb-record-$RRWEBV-$RRWEBSV.js"
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js "/home/statcounter/www/libs/rrweb/versioned/rrweb-record-$RRWEBV-$RRWEBSV.min.js"
+sed -i "s|var rrweb_version = '.*';  // DEBUG|var rrweb_version = '$RRWEBV';  // DEBUG|g" -- /home/statcounter/www/counter/recorder_test_uncompressed.js
+sed -i "s|var rrweb_snapshot_version = '.*';  // DEBUG|var rrweb_snapshot_version = '$RRWEBSV';  // DEBUG|g" -- /home/statcounter/www/counter/recorder_test_uncompressed.js
+cd ..
+./pack_counter.py --rrweb
+cd - &> /dev/null
