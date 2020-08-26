@@ -20,7 +20,7 @@ import { INode } from 'rrweb-snapshot';
 export function on(
   type: string,
   fn: EventListenerOrEventListenerObject,
-  target: Document | Window = document,
+  target: Document | Window = getTopWindow().document,
 ): listenerHandler {
   const options = { capture: true, passive: true };
   target.addEventListener(type, fn, options);
