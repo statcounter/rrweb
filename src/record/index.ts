@@ -108,6 +108,7 @@ function record<T = eventWithTime>(
           // as they destroy some (hidden) info:
           headMetaAuthorship: _slimDOMOptions === 'all',
           headMetaDescKeywords: _slimDOMOptions === 'all',
+          adPlaceholder: _slimDOMOptions === 'all',
         }
       : _slimDOMOptions
       ? _slimDOMOptions
