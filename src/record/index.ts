@@ -1,4 +1,4 @@
-import { snapshot, MaskInputOptions, SlimDOMOptions } from 'rrweb-snapshot';
+import { snapshot, cleanupSnapshot, MaskInputOptions, SlimDOMOptions } from 'rrweb-snapshot';
 import { initObservers, mutationBuffers } from './observer';
 import {
   on,
@@ -31,6 +31,7 @@ function wrapEvent(e: event): eventWithTime {
 }
 
 let wrappedEmit!: (e: eventWithTime, isCheckout?: boolean) => void;
+let stop!: () => void;
 
 let takeFullSnapshot!: (isCheckout?: boolean) => void;
 
@@ -463,9 +464,17 @@ function record<T = eventWithTime>(
         ),
       );
     }
-    return () => {
+    stop = function(cleanup: boolean) {
       handlers.forEach((h) => h());
+      if (cleanup) {
+        let id: keyof typeof mirror.map;
+        for (id in mirror.map) {
+          delete mirror.map[id].__sn;
+        }
+        cleanupSnapshot();
+      }
     };
+    return stop;
   } catch (error) {
     // TODO: handle internal error
     console.warn(error);
@@ -496,6 +505,10 @@ record.takeFullSnapshot = (isCheckout?: boolean) => {
     throw new Error('please take full snapshot after start recording');
   }
   takeFullSnapshot(isCheckout);
+};
+
+record.stop = (cleanup=true) => {
+  stop(cleanup);
 };
 
 record.mirror = mirror;
