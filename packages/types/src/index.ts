@@ -729,7 +729,7 @@ export type throttleOptions = {
   trailing?: boolean;
 };
 
-export type listenerHandler = () => void;
+export type listenerHandler = (cleanup?: boolean) => void;
 export type hookResetter = () => void;
 
 export type playerMetaData = {

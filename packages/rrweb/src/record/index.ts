@@ -1,5 +1,6 @@
 import {
   snapshot,
+  cleanupSnapshot,
   type MaskInputOptions,
   type SlimDOMOptions,
   createMirror,
@@ -51,6 +52,7 @@ let takeFullSnapshot!: (isCheckout?: boolean) => void;
 let canvasManager!: CanvasManager;
 let assetManager!: AssetManager;
 let recording = false;
+let stop!: (cleanup: boolean) => void;
 
 // Multiple tools (i.e. MooTools, Prototype.js) override Array.from and drop support for the 2nd parameter
 // Try to pull a clean implementation from a newly created iframe
@@ -667,7 +669,7 @@ function record<T = eventWithTime>(
         ),
       );
     }
-    return () => {
+    stop = function(cleanup: boolean) {
       handlers.forEach((handler) => {
         try {
           handler();
@@ -690,7 +692,15 @@ function record<T = eventWithTime>(
       processedNodeManager.destroy();
       recording = false;
       unregisterErrorHandler();
+      if (cleanup) {
+        let id: keyof typeof mirror.map;
+        for (id in mirror.map) {
+          delete mirror.map[id].__sn;
+        }
+        cleanupSnapshot();
+      }
     };
+    return stop;
   } catch (error) {
     // TODO: handle internal error
     console.warn(error);
@@ -719,6 +729,10 @@ record.takeFullSnapshot = (isCheckout?: boolean) => {
     throw new Error('please take full snapshot after start recording');
   }
   takeFullSnapshot(isCheckout);
+};
+
+record.stop = (cleanup=true) => {
+  stop(cleanup);
 };
 
 record.mirror = mirror;
