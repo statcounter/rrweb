@@ -2255,6 +2255,9 @@ export class Replayer {
         ? defaultMouseTailConfig
         : Object.assign({}, defaultMouseTailConfig, this.config.mouseTail);
 
+    // either hsla or rgba
+    const stroke_alpha_match = strokeStyle.match(/[a-z]+a\([^)]+?,[^)]+?,[^)]+?,([^)]+)\)/)
+
     const draw = () => {
       if (!this.mouseTail) {
         return;
@@ -2269,16 +2272,38 @@ export class Replayer {
       ctx.lineCap = lineCap;
       ctx.strokeStyle = strokeStyle;
       ctx.moveTo(this.tailPositions[0].x, this.tailPositions[0].y);
-      this.tailPositions.forEach((p) => ctx.lineTo(p.x, p.y));
+      if (stroke_alpha_match) {
+        this.tailPositions.forEach((p) => {
+          ctx.strokeStyle = strokeStyle.replace(',' + stroke_alpha_match[1] + ')', ', ' + p.fade + ')')
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+        });
+      } else {
+        this.tailPositions.forEach((p) => ctx.lineTo(p.x, p.y));
+      }
       ctx.stroke();
     };
-
+    if (stroke_alpha_match) {
+      position.fade = parseFloat(stroke_alpha_match[1]);
+    }
     this.tailPositions.push(position);
     draw();
     setTimeout(() => {
       this.tailPositions = this.tailPositions.filter((p) => p !== position);
       draw();
     }, duration / this.speedService.state.context.timer.speed);
+
+    if (stroke_alpha_match) {
+      function fadeLine() {
+        position.fade = position.fade / 2;
+        if (position.fade > 0.05) {
+          setTimeout(fadeLine, duration/5);
+        }
+      }
+      setTimeout(fadeLine, duration/5);
+    }
   }
 
   private hoverElements(el: Element) {
