@@ -131,6 +131,8 @@ export class Replayer {
     events: Array<eventWithTime | string>,
     config?: Partial<playerConfig>,
   ) {
+    events.sort((a1, a2) => a1.timestamp - a2.timestamp);
+
     if (!config?.liveMode && events.length < 2) {
       throw new Error('Replayer need at least 2 events.');
     }
