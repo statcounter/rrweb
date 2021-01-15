@@ -281,16 +281,20 @@ export type textMutation = {
   value: string | null;
 };
 
+export type styleAttributeValue = {
+  [key:string]: [string, string] | false;
+};
+
 export type attributeCursor = {
   node: Node;
   attributes: {
-    [key: string]: string | null;
+    [key: string]: string | styleAttributeValue | null;
   };
 };
 export type attributeMutation = {
   id: number;
   attributes: {
-    [key: string]: string | null;
+    [key: string]: string | styleAttributeValue | null;
   };
 };
 

@@ -74,11 +74,17 @@ function stringifySnapshots(snapshots: eventWithTime[]): string {
           s.data.source === IncrementalSource.Mutation
         ) {
           s.data.attributes.forEach((a) => {
-            if (
-              'style' in a.attributes &&
-              coordinatesReg.test(a.attributes.style!)
-            ) {
-              a.attributes.style = a.attributes.style!.replace(coordinatesReg, '$1: Npx');
+            if ('style' in a.attributes && typeof a.attributes.style === 'object') {
+	      for (let k in a.attributes.style) {
+		const v = a.attributes.style[k];
+		if (Array.isArray(v)) {
+		  if (coordinatesReg.test(k + ': ' + v[0])) {
+		    // TODO: could round the number here instead depending on what's coming out of various test envs
+		    a.attributes.style[k] = ['Npx', v[1]];
+		  }
+		}
+		coordinatesReg.lastIndex = 0; // wow, a real wart in ECMAScript
+	      }
             }
           });
           s.data.adds.forEach((add) => {
@@ -90,6 +96,7 @@ function stringifySnapshots(snapshots: eventWithTime[]): string {
             ) {
               add.node.attributes.style = add.node.attributes.style.replace(coordinatesReg, '$1: Npx');
             }
+	    coordinatesReg.lastIndex = 0; // wow, a real wart in ECMAScript
           });
         }
         delete s.timestamp;
