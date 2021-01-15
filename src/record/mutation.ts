@@ -272,6 +272,9 @@ export default class MutationBuffer {
       const parentId = isShadowRoot(n.parentNode)
         ? this.mirror.getId((shadowHost as unknown) as INode)
         : this.mirror.getId((n.parentNode as Node) as INode);
+      if (parentId === IGNORED_NODE) {
+        return;
+      }
       const nextId = getNextId(n);
       if (parentId === -1 || nextId === -1) {
         return addList.addNode(n);
