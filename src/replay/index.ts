@@ -754,7 +754,7 @@ export class Replayer {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d')
         var imgd = ctx?.createImageData(canvas.width, canvas.height)
-        var d = imgd?.data                     
+        var d = imgd?.data
         d = JSON.parse(event.data.args[0])
         ctx?.putImageData(imgd!, 0, 0)
       }
@@ -1124,6 +1124,10 @@ export class Replayer {
     const appendNode = (mutation: addedNodeMutation) => {
       if (!this.iframe.contentDocument) {
         return console.warn('Looks like your replayer has been destroyed.');
+      }
+      if (mutation.parentId == -2) {
+        // temporary - needed for recordings generated before https://github.com/statcounter/rrweb/commit/e2a3a72132de2cf327c1f79a99a3c269d301765e
+        return;
       }
       let parent: INode | null | ShadowRoot = this.mirror.getNode(
         mutation.parentId,
