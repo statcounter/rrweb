@@ -178,6 +178,8 @@ describe('record integration tests', function (this: ISuite) {
 
     // toggle the select box
     await page.click('.select2-container');
+    // test storage of !important style
+    await page.evaluate('document.getElementById("select2-drop").setAttribute("style", document.getElementById("select2-drop").style.cssText + "color:black !important")');
     await page.click('.select2-container');
 
     const snapshots = await page.evaluate('window.snapshots');
