@@ -7004,26 +7004,11 @@ exports[`select2 1`] = `
           \\"attributes\\": {
             \\"id\\": \\"select2-drop\\",
             \\"style\\": {
-              \\"left\\": [
-                \\"Npx\\",
-                \\"\\"
-              ],
-              \\"width\\": [
-                \\"Npx\\",
-                \\"\\"
-              ],
-              \\"top\\": [
-                \\"Npx\\",
-                \\"\\"
-              ],
-              \\"bottom\\": [
-                \\"auto\\",
-                \\"\\"
-              ],
-              \\"display\\": [
-                \\"block\\",
-                \\"\\"
-              ],
+              \\"left\\": \\"Npx\\",
+              \\"width\\": \\"Npx\\",
+              \\"top\\": \\"Npx\\",
+              \\"bottom\\": \\"auto\\",
+              \\"display\\": \\"block\\",
               \\"position\\": false,
               \\"visibility\\": false
             },
@@ -7485,10 +7470,7 @@ exports[`select2 1`] = `
           \\"id\\": 70,
           \\"attributes\\": {
             \\"style\\": {
-              \\"display\\": [
-                \\"none\\",
-                \\"\\"
-              ]
+              \\"display\\": \\"none\\"
             }
           }
         },
@@ -7497,10 +7479,7 @@ exports[`select2 1`] = `
           \\"attributes\\": {
             \\"id\\": null,
             \\"style\\": {
-              \\"display\\": [
-                \\"none\\",
-                \\"\\"
-              ]
+              \\"display\\": \\"none\\"
             }
           }
         },

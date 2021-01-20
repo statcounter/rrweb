@@ -282,7 +282,7 @@ export type textMutation = {
 };
 
 export type styleAttributeValue = {
-  [key:string]: [string, string] | false;
+  [key:string]: [string, string] | string | false;
 };
 
 export type attributeCursor = {
