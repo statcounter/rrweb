@@ -324,6 +324,15 @@ export default class MutationBuffer {
       removes: this.removes,
       adds,
     };
+
+    while (addList.length) {
+      // clean up if previous iteration over addList didn't exhaust it
+      // we still need to remove the '__ln' reference
+      // from the DOM elements to prevent them polluting
+      // subsequent mutations
+      addList.removeNode(addList.get(0).value);
+    }
+
     // payload may be empty if the mutations happened in some blocked elements
     if (
       !payload.texts.length &&
