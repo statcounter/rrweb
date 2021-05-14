@@ -13,6 +13,7 @@ cp -f /home/statcounter/rrweb/dist/record/rrweb-record.js "/home/statcounter/www
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js "/home/statcounter/www/libs/rrweb/versioned/rrweb-record-$RRWEBV-$RRWEBSV.min.js"
 sed -i "s|var rrweb_version = '.*';  // DEBUG|var rrweb_version = '$RRWEBV';  // DEBUG|g" -- /home/statcounter/www/counter/recorder_test_uncompressed.js
 sed -i "s|var rrweb_snapshot_version = '.*';  // DEBUG|var rrweb_snapshot_version = '$RRWEBSV';  // DEBUG|g" -- /home/statcounter/www/counter/recorder_test_uncompressed.js
+touch /home/statcounter/www/counter/recorder_test_uncompressed.js
 cd ..
 ./pack_counter.py --rrweb
 cd - &> /dev/null
