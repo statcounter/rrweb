@@ -57,6 +57,7 @@ import { callbackWrapper } from './error-handler';
 import dom, { mutationObserverCtor } from '@rrweb/utils';
 
 export const mutationBuffers: MutationBuffer[] = [];
+export let ongoingMove: ((now?: number) => void) | null = null;
 
 // Event.path is non-standard and used in some older browsers
 type NonStandardEvent = Omit<Event, 'composedPath'> & {
@@ -125,27 +126,29 @@ function initMoveObserver({
 
   let positions: mousePosition[] = [];
   let timeBaseline: number | null;
-  const wrappedCb = throttle(
-    callbackWrapper(
-      (
-        source:
-          | IncrementalSource.MouseMove
-          | IncrementalSource.TouchMove
-          | IncrementalSource.Drag,
-      ) => {
-        const totalOffset = Date.now() - timeBaseline!;
-        mousemoveCb(
-          positions.map((p) => {
-            p.timeOffset -= totalOffset;
-            return p;
-          }),
-          source,
-        );
-        positions = [];
-        timeBaseline = null;
-      },
-    ),
-    callbackThreshold,
+  let source:
+    | IncrementalSource.MouseMove
+    | IncrementalSource.TouchMove
+    | IncrementalSource.Drag;
+  function moveEmission() {
+    if (!positions.length) {
+      // already emitted
+      return;
+    }
+    ongoingMove = null;
+    const totalOffset = Date.now() - timeBaseline!;
+    mousemoveCb(
+      positions.map((p) => {
+        p.timeOffset -= totalOffset;
+        return p;
+      }),
+      source,
+    );
+    positions = [];
+    timeBaseline = null;
+  }
+  const throttledMoveEmission = callbackWrapper(
+    throttle(moveEmission, callbackThreshold),
   );
   const updatePosition = callbackWrapper(
     throttle<MouseEvent | TouchEvent | DragEvent>(
@@ -166,13 +169,14 @@ function initMoveObserver({
         });
         // it is possible DragEvent is undefined even on devices
         // that support event 'drag'
-        wrappedCb(
+        source =
           typeof DragEvent !== 'undefined' && evt instanceof DragEvent
             ? IncrementalSource.Drag
             : evt instanceof MouseEvent
             ? IncrementalSource.MouseMove
-            : IncrementalSource.TouchMove,
-        );
+            : IncrementalSource.TouchMove;
+        ongoingMove = moveEmission;
+        throttledMoveEmission();
       }),
       threshold,
       {
