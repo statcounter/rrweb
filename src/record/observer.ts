@@ -180,19 +180,23 @@ function initMoveObserver(
     | IncrementalSource.TouchMove
     | IncrementalSource.Drag,
 
-  function moveEmission() {
+  function moveEmission(now: number | undefined) {
     if (!positions.length) {
       // already emitted
       return;
     }
     ongoingMove = null;
-    const totalOffset = Date.now() - timeBaseline!;
+    if (now === undefined) {
+      now = Date.now();
+    }
+    const totalOffset = now - timeBaseline!;
     cb(
       positions.map((p) => {
         p.timeOffset -= totalOffset;
         return p;
       }),
       source,
+      now,
     );
     positions = [];
     timeBaseline = null;
