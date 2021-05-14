@@ -167,7 +167,7 @@ function record<T = eventWithTime>(
       // emit any ongoing (but throttled) mouse or touch move;
       // emitting now creates more events, but ensures events are emitted in
       // sequence without any overlap from the negative Move timeOffset
-      ongoingMove();
+      ongoingMove(e.timestamp);
     }
 
     emit(((packFn ? packFn(e) : e) as unknown) as T, isCheckout);
@@ -326,16 +326,15 @@ function record<T = eventWithTime>(
       return initObservers(
         {
           mutationCb: wrappedMutationEmit,
-          mousemoveCb: (positions, source) =>
-            wrappedEmit(
-              wrapEvent({
-                type: EventType.IncrementalSnapshot,
-                data: {
-                  source,
-                  positions,
-                },
-              }),
-            ),
+          mousemoveCb: (positions, source, timestamp) =>
+            wrappedEmit({
+              type: EventType.IncrementalSnapshot,
+              data: {
+                source,
+                positions,
+              },
+              timestamp: timestamp,
+            }),
           mouseInteractionCb: (d) =>
             wrappedEmit(
               wrapEvent({
