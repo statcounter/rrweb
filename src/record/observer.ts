@@ -59,6 +59,7 @@ type WindowWithAngularZone = Window & {
 };
 
 export const mutationBuffers: MutationBuffer[] = [];
+export const ongoingMove: function | null = null;
 
 function getEventTarget(event: Event): EventTarget | null {
   try {
@@ -173,26 +174,25 @@ function initMoveObserver(
 
   let positions: mousePosition[] = [];
   let timeBaseline: number | null;
-  const wrappedCb = throttle(
-    (
-      source:
-        | IncrementalSource.MouseMove
-        | IncrementalSource.TouchMove
-        | IncrementalSource.Drag,
-    ) => {
-      const totalOffset = Date.now() - timeBaseline!;
-      cb(
-        positions.map((p) => {
-          p.timeOffset -= totalOffset;
-          return p;
-        }),
-        source,
-      );
-      positions = [];
-      timeBaseline = null;
-    },
-    callbackThreshold,
-  );
+  let source: IncrementalSource.MouseMove | IncrementalSource.TouchMove | IncrementalSource.Drag;
+  function moveEmission() {
+    if (!positions.length) {
+      // already emitted
+      return;
+    }
+    ongoingMove = null;
+    const totalOffset = Date.now() - timeBaseline!;
+    cb(
+      positions.map((p) => {
+        p.timeOffset -= totalOffset;
+        return p;
+      }),
+      source,
+    );
+    positions = [];
+    timeBaseline = null;
+  }
+  const throttledMoveEmission = throttle(moveEmission, callbackThreshold);
   const updatePosition = throttle<MouseEvent | TouchEvent | DragEvent>(
     (evt) => {
       const target = getEventTarget(evt);
@@ -208,13 +208,13 @@ function initMoveObserver(
         id: mirror.getId(target as INode),
         timeOffset: Date.now() - timeBaseline,
       });
-      wrappedCb(
-        evt instanceof MouseEvent
-          ? IncrementalSource.MouseMove
-          : evt instanceof DragEvent
-          ? IncrementalSource.Drag
-          : IncrementalSource.TouchMove,
-      );
+      source = evt instanceof MouseEvent
+        ? IncrementalSource.MouseMove
+        : evt instanceof DragEvent
+        ? IncrementalSource.Drag
+        : IncrementalSource.TouchMove;
+      ongoingMove = moveEmission;
+      throttledMoveEmission();
     },
     threshold,
     {

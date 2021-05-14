@@ -1,5 +1,5 @@
 import { snapshot, cleanupSnapshot, MaskInputOptions, SlimDOMOptions } from 'rrweb-snapshot';
-import { initObservers, mutationBuffers } from './observer';
+import { initObservers, mutationBuffers, ongoingMove } from './observer';
 import {
   on,
   getWindowWidth,
@@ -162,6 +162,12 @@ function record<T = eventWithTime>(
       // we've got a user initiated event so first we need to apply
       // all DOM changes that have been buffering during paused state
       mutationBuffers.forEach((buf) => buf.unfreeze());
+    }
+    if (ongoingMove) {
+      // emit any ongoing (but throttled) mouse or touch move;
+      // emitting now creates more events, but ensures events are emitted in
+      // sequence without any overlap from the negative Move timeOffset
+      ongoingMove();
     }
 
     emit(((packFn ? packFn(e) : e) as unknown) as T, isCheckout);
