@@ -2,8 +2,10 @@ npm run bundle:browser-record
 dos2unix -q dist/record/* dist/replay/*
 cp -f /home/statcounter/rrweb/dist/replay/rrweb-replay.js /home/statcounter/www/libs/rrweb/rrweb-replay.js
 cp -f /home/statcounter/rrweb/dist/replay/rrweb-replay.min.js /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
+sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js /home/statcounter/www/libs/rrweb/rrweb-record.min.js
+sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-record.min.js
 RRWEBV=`git rev-parse HEAD`
 cd rrweb-snapshot
 RRWEBSV=`git rev-parse HEAD`
