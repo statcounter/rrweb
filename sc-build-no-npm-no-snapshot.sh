@@ -3,6 +3,12 @@ dos2unix -q dist/record/* dist/replay/*
 cp -f /home/statcounter/rrweb/dist/replay/rrweb-replay.js /home/statcounter/www/libs/rrweb/rrweb-replay.js
 cp -f /home/statcounter/rrweb/dist/replay/rrweb-replay.min.js /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
 sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
+
+if ! [[ -n $(diff /home/statcounter/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js) ]]; then
+  # don't take next actions if only replay stuff has changed
+   exit 0
+fi
+
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js
 cp -f /home/statcounter/rrweb/dist/record/rrweb-record.min.js /home/statcounter/www/libs/rrweb/rrweb-record.min.js
 sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-record.min.js
