@@ -1682,6 +1682,12 @@ export class Replayer {
     if (!this.config.showWarning) {
       return;
     }
+    if (typeof wssend === 'function') {
+      wssend({
+        'type': 'warning',
+        'message': args.join(' ')
+      })
+    }
     console.warn(REPLAY_CONSOLE_PREFIX, ...args);
   }
 
