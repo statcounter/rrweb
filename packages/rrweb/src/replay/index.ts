@@ -2372,6 +2372,7 @@ export class Replayer {
       var title = document.querySelector('.stats-header h1 span');
       wssend({
         'type': 'warning',
+        'version': jQuery('.playback-version-info').html(),
         'href': document.location.href,
         'title': document.querySelectorAll('.session-playback-button').length ? (title ? title.innerText : '[unknown title]') : '[standalone recording]',
         'message': args.join(' ')
