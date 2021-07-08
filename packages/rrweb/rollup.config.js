@@ -221,7 +221,18 @@ for (const c of baseConfigs) {
 
 configs = configs.filter(function(c){
   // statcounter: we are not interested in pako.js
-  return c.input.indexOf('pack.ts') === -1;
+  if (c.input.indexOf('pack.ts') !== -1) {
+    return false;
+  } else {
+    var outputs = c.output.filter(function(co){
+      // statcounter: not interested in other formats
+      return co.format === 'iife';
+    });
+    if (!outputs.length) {
+      return false;
+    }
+  }
+  return true;
 });
 
 if (process.env.BROWSER_ONLY) {
