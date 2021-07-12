@@ -2,6 +2,8 @@ import { createMachine, interpret, assign, StateMachine } from '@xstate/fsm';
 import {
   playerConfig,
   eventWithTime,
+  fullSnapshotEvent,
+  incrementalSnapshotEvent,
   actionWithDelay,
   ReplayerEvents,
   EventType,
@@ -74,6 +76,107 @@ export function discardPriorSnapshots(
   }
   return events;
 }
+
+
+function mutateNodeById(
+  tree,
+  searchId: int,
+  mutateFn,
+) {
+  // This search algorithm isn't tested!
+  // but is based on the fullsnapshot tree being ordered depth first
+  // (which likely won't hold after multiple mutations are applied)
+  let lastChild = null;
+  for (const childNode of tree.childNodes) {
+    if (childNode.id == searchId) {
+      childNode = mutateFn(childNode);
+    } else if (childNode.id < searchId) {
+      lastChild = childNode;
+      continue;
+    }
+    break;
+  }
+  if (!lastChild) {
+    throw new Error('Node with id ' + searchId + ' not found');
+  }
+  mutateNodeById(lastChild, searchId, mutateFn);
+}
+
+
+function updateSnapshot(
+  snapshot: fullSnapshotEvent,
+  mutation: incrementalSnapshotEvent,
+): fullSnapshotEvent {
+  if (!snapshot.copied) {
+    // deep copy so we don't modify the original event
+    snapshot = JSON.parse(JSON.stringify(snapshot));
+    snapshot.copied = true;
+  }
+  for (const add of mutation.data.adds) {
+    mutateNodeById(
+      snapshot.data.node,
+      add.parentId,
+      function(parent) {
+        for (let i=0; i<parent.childNodes.length; i++) {
+          const child = parent.childNodes[i];
+          if (add.nextId === null ||
+              child.id === add.nextId) {
+            parent.childNodes = Array.prototype.concat(
+              parent.childNodes.slice(0, i),
+              [add.node],
+              parent.childNodes.slice(i),
+            )
+            break;
+          }
+        }
+      }
+    );
+  }
+  for (const attrNode of mutation.data.attributes) {
+    mutateNodeById(
+      snapshot.data.node,
+      attrNode.id,
+      function(node) {
+        for (const attrKey of attrNode.attributes) {
+          if (attrKey == 'style') {
+            // todo nested update and style parsing
+          } else {
+            // update
+            node.attributes[attrKey] = attrNode.attributes[attrKey];
+          }
+        }
+      }
+    );
+  }
+  for (const text of mutation.data.texts) {
+    mutateNodeById(
+      snapshot.data.node,
+      text.id,
+      function(node) {
+        node.textContent = text.value;
+      }
+    );
+  }
+  for (const rem of mutation.data.removes) {
+    mutateNodeById(
+      snapshot.data.node,
+      rem.parentId,
+      function(parent) {
+        for (let i=0; i<parent.childNodes.length; i++) {
+          const child = parent.childNodes[i];
+          if (child.id === rem.id) {
+            parent.childNodes = Array.prototype.concat(
+              parent.childNodes.slice(0, i),
+              parent.childNodes.slice(i + 1),
+            )
+            break;
+          }
+        }
+      }
+    );
+  }
+}
+
 
 type PlayerAssets = {
   emitter: Emitter;
@@ -187,6 +290,8 @@ export function createPlayerService(
           }
 
           const actions = new Array<actionWithDelay>();
+          const syncedFullSnapshot = null;
+          const castAfterSyncedFullSnapshot: { (): void } [];
           for (const event of neededEvents) {
             if (
               lastPlayedTimestamp &&
@@ -202,7 +307,21 @@ export function createPlayerService(
             }
             const castFn = getCastFn(event, isSync);
             if (isSync) {
-              castFn();
+              if (event.type === EventType.Fullsnapshot) {
+                if (syncedFullSnapshot) {
+                  throw new Error('multiple prior FullSnapshots should be discarded by discardPriorSnapshots');
+                }
+                syncedFullSnapshot = event;
+              } else if (event.type === EventType.IncrementalSnapshot &&
+                         event.data.source === IncrementalSource.Mutation) {
+                syncedFullSnapshot = updateSnapshot(syncedFullSnapshot, event);
+              } else if (syncedFullSnapshot) {
+                // this ensures the synced events apply in original order
+                // although I don't have an example of where that would matter
+                castAfterSyncedFullSnapshot.push(castFn);
+              } else {
+                castFn();
+              }
             } else {
               actions.push({
                 doAction: () => {
@@ -211,6 +330,13 @@ export function createPlayerService(
                 },
                 delay: event.delay!,
               });
+            }
+          }
+          if (syncedFullSnapshot) {
+            delete syncedFullSnapshot.copied;
+            getCastFn(syncedFullSnapshot, true)();
+            for (const castFn of castAfterSyncedFullSnapshot) {
+              castFn();
             }
           }
           emitter.emit(ReplayerEvents.Flush);
