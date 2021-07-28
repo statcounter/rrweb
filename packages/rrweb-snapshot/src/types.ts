@@ -69,6 +69,7 @@ export type SlimDOMOptions = Partial<{
    * blocks title tag 'animations' which can generate a lot of mutations that aren't usually displayed in replayers
    **/
   headTitleMutations: boolean;
+  adPlaceholder: boolean;
 }>;
 
 export type MaskTextFn = (text: string, element: HTMLElement | null) => string;

@@ -917,6 +917,7 @@ export type elementNode = {
   needBlock?: boolean;
   // This is a custom element or not.
   isCustom?: true;
+  placeholderClass?: string;
 };
 
 export type textNode = {

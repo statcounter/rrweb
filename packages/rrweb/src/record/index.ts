@@ -211,6 +211,7 @@ function record<T = eventWithTime>(
           headMetaAuthorship: _slimDOMOptions === 'all',
           headMetaDescKeywords: _slimDOMOptions === 'all',
           headTitleMutations: _slimDOMOptions === 'all',
+          adPlaceholder: _slimDOMOptions === 'all',
         }
       : _slimDOMOptions
       ? _slimDOMOptions
