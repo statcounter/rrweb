@@ -314,6 +314,10 @@ export default class MutationBuffer {
         ? this.mirror.getId(getShadowHost(n))
         : this.mirror.getId(parent);
 
+      if (parentId === IGNORED_NODE) {
+        return;
+      }
+
       const nextId = getNextId(n);
       if (parentId === -1 || nextId === -1) {
         return addList.addNode(n);

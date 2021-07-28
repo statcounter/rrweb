@@ -1006,6 +1006,7 @@ export function serializeNodeWithId(
     maskTextClass: string | RegExp;
     maskTextSelector: string | null;
     skipChild: boolean;
+    ignoreChildren: boolean;
     inlineStylesheet: boolean;
     newlyAddedElement?: boolean;
     maskInputOptions?: MaskInputOptions;
@@ -1071,7 +1072,10 @@ export function serializeNodeWithId(
     onAssetDetected,
   } = options;
   let { needsMask } = options;
-  let { preserveWhiteSpace = true } = options;
+  let {
+    preserveWhiteSpace = true,
+    ignoreChildren = false,
+  } = options;
 
   if (onAssetDetected) {
     if (captureAssets.images === undefined && inlineImages) {
@@ -1128,23 +1132,22 @@ export function serializeNodeWithId(
     // Reuse the previous id
     id = mirror.getId(n);
   } else if (
+    ignoreChildren ||
     slimDOMExcluded(_serializedNode, slimDOMOptions) ||
     (!preserveWhiteSpace &&
       _serializedNode.type === NodeType.Text &&
       !_serializedNode.textContent.replace(/^\s+|\s+$/gm, '').length)
   ) {
+    ignoreChildren = true;
     id = IGNORED_NODE;
   } else {
     id = genId();
   }
 
   const serializedNode = Object.assign(_serializedNode, { id });
-  // add IGNORED_NODE to mirror to track nextSiblings
-  mirror.add(n, serializedNode);
 
-  if (id === IGNORED_NODE) {
-    return null; // slimDOM
-  }
+  // also add IGNORED_NODE to mirror to track nextSiblings
+  mirror.add(n, serializedNode);
 
   if (onSerialize) {
     onSerialize(n);
@@ -1180,6 +1183,7 @@ export function serializeNodeWithId(
       maskTextClass,
       maskTextSelector,
       skipChild,
+      ignoreChildren,
       inlineStylesheet,
       maskInputOptions,
       maskTextFn,
@@ -1247,6 +1251,15 @@ export function serializeNodeWithId(
     serializedNode.isShadow = true;
   }
 
+  if (id === IGNORED_NODE) {
+    // we want to also assign the IGNORED_NODE id to child elements
+    // in the same document (so that mutations on them can also be ignored)
+    // which is why we wait until now to return null
+    // however, there is no need to initiate recording on iframes within
+    // ignored nodes, so early-out now
+    return null;  // slimDOM
+  }
+
   if (
     serializedNode.type === NodeType.Element &&
     serializedNode.tagName === 'iframe' &&
@@ -1266,6 +1279,7 @@ export function serializeNodeWithId(
             maskTextClass,
             maskTextSelector,
             skipChild: false,
+            ignoreChildren: false,
             inlineStylesheet,
             maskInputOptions,
             maskTextFn,
@@ -1325,6 +1339,7 @@ export function serializeNodeWithId(
             maskTextClass,
             maskTextSelector,
             skipChild: false,
+            ignoreChildren: false,
             inlineStylesheet,
             maskInputOptions,
             maskTextFn,
@@ -1481,6 +1496,7 @@ function snapshot(
     maskTextClass,
     maskTextSelector,
     skipChild: false,
+    ignoreChildren: false,
     inlineStylesheet,
     maskInputOptions,
     maskTextFn,
