@@ -660,6 +660,9 @@ function serializeElementNode(
     const attr = n.attributes[i];
     if (attributes._cssText && ['href', 'rel'].includes(attr.name)) {
       // ignore in snapshot, and no need to try to asset capture the href (already done)
+      if (attr.name === 'href') {
+        attributes._originalHref = value;
+      }
     } else if (!ignoreAttribute(tagName, attr.name, attr.value) && !needBlock) {
       const value = transformAttribute(
         doc,
