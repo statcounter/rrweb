@@ -129,6 +129,10 @@ export function stringifySnapshots(snapshots: eventWithTime[]): string {
         return true;
       })
       .map((s) => {
+        if (s.type === EventType.Meta) {
+          delete s.data.devicePixelRatio; // strip as will vary according to test environment
+        }
+
         // FIXME: travis coordinates seems different with my laptop
         const coordinatesReg =
           /(bottom|top|left|right|width|height): \d+(\.\d+)?px/g;

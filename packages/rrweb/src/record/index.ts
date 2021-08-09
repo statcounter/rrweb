@@ -431,6 +431,7 @@ function record<T = eventWithTime>(
           href: twindow.location.href,
           width: getWindowWidth(),
           height: getWindowHeight(),
+          devicePixelRatio: window.devicePixelRatio,
         },
       },
       isCheckout,
