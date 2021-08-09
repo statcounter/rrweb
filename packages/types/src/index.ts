@@ -496,12 +496,16 @@ export type CanvasArg =
   | null
   | CanvasArg[];
 
-type mouseInteractionParam = {
+export type mouseInteractionParam = {
   type: MouseInteractions;
   id: number;
   x?: number;
   y?: number;
   pointerType?: PointerTypes;
+};
+
+export type clickParam = mouseInteractionParam & {
+  href?: string;
 };
 
 export type mouseInteractionCallBack = (d: mouseInteractionParam) => void;

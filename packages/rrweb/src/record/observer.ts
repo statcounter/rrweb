@@ -31,6 +31,8 @@ import type {
   mousemoveCallBack,
   mousePosition,
   mouseInteractionCallBack,
+  mouseInteractionParam,
+  clickParam,
   listenerHandler,
   scrollCallback,
   styleSheetRuleCallback,
@@ -266,13 +268,35 @@ function initMouseInteractionObserver({
       }
       const id = mirror.getId(target);
       const { clientX, clientY } = e;
-      callbackWrapper(mouseInteractionCb)({
+      let emissionEvent: mouseInteractionParam | clickParam = {
         type: MouseInteractions[thisEventKey],
         id,
         x: clientX,
         y: clientY,
         ...(pointerType !== null && { pointerType }),
-      });
+      };
+      const htarget = target as Element;
+      if (MouseInteractions[eventKey] === MouseInteractions.Click) {
+        let href: string | null = null;
+        if (
+          htarget.tagName.toLowerCase() === 'a' &&
+          (htarget as HTMLAnchorElement).href
+        ) {
+          href = (htarget as HTMLAnchorElement).href;
+        } else if (
+          htarget.tagName.toLowerCase() === 'area' &&
+          (htarget as HTMLAreaElement).href
+        ) {
+          href = (htarget as HTMLAreaElement).href;
+        }
+        if (href !== null) {
+          emissionEvent = {
+            ...emissionEvent,
+            href: href,
+          };
+        }
+      }
+      callbackWrapper(mouseInteractionCb)(emissionEvent);
     };
   };
   Object.keys(MouseInteractions)
