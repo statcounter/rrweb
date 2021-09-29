@@ -18,7 +18,7 @@ import dom from '@rrweb/utils';
 export function on(
   type: string,
   fn: EventListenerOrEventListenerObject,
-  target: Document | IWindow = document,
+  target: Document | IWindow,
 ): listenerHandler {
   const options = { capture: true, passive: true };
   target.addEventListener(type, fn, options);
