@@ -8,6 +8,7 @@ import {
 import { initObservers, mutationBuffers, ongoingMove } from './observer';
 import {
   on,
+  getTopWindow,
   getWindowWidth,
   getWindowHeight,
   getWindowScroll,
@@ -157,6 +158,10 @@ function record<T = eventWithTime>(
       /* no-op since in this case we don't need to record anything from this frame in particular */
     };
   }
+
+  const twindow = getTopWindow();
+  const tdoc = twindow.document;
+
   // move departed options to new options
   if (mousemoveWait !== undefined && sampling.mousemove === undefined) {
     sampling.mousemove = mousemoveWait;
@@ -422,7 +427,7 @@ function record<T = eventWithTime>(
       {
         type: EventType.Meta,
         data: {
-          href: window.location.href,
+          href: twindow.location.href,
           width: getWindowWidth(),
           height: getWindowHeight(),
         },
@@ -438,7 +443,7 @@ function record<T = eventWithTime>(
     const capturedAssetStatuses: assetStatus[] = [];
 
     mutationBuffers.forEach((buf) => buf.lock()); // don't allow any mirror modifications during snapshotting
-    const node = snapshot(document, {
+    const node = snapshot(tdoc, {
       mirror,
       blockClass,
       blockSelector,
@@ -461,7 +466,7 @@ function record<T = eventWithTime>(
         }
         if (hasShadowRoot(n)) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          shadowDomManager.addShadowRoot(dom.shadowRoot(n as Node)!, document);
+          shadowDomManager.addShadowRoot(dom.shadowRoot(n as Node)!, tdoc);
         }
       },
       onIframeLoad: (iframe, childSn) => {
@@ -488,7 +493,7 @@ function record<T = eventWithTime>(
     }
     const data: any = {
       node,
-      initialOffset: getWindowScroll(window),
+      initialOffset: getWindowScroll(twindow),
     };
     if (capturedAssetStatuses.length) {
       data.capturedAssetStatuses = capturedAssetStatuses;
@@ -661,23 +666,24 @@ function record<T = eventWithTime>(
 
     const init = () => {
       takeFullSnapshot();
-      handlers.push(observe(document));
+      handlers.push(observe(tdoc));
       recording = true;
     };
-    if (
-      document.readyState === 'interactive' ||
-      document.readyState === 'complete'
-    ) {
+    if (tdoc.readyState === 'interactive' || tdoc.readyState === 'complete') {
       init();
     } else {
       handlers.push(
-        on('DOMContentLoaded', () => {
-          wrappedEmit({
-            type: EventType.DomContentLoaded,
-            data: {},
-          });
-          if (recordAfter === 'DOMContentLoaded') init();
-        }),
+        on(
+          'DOMContentLoaded',
+          () => {
+            wrappedEmit({
+              type: EventType.DomContentLoaded,
+              data: {},
+            });
+            if (recordAfter === 'DOMContentLoaded') init();
+          },
+          tdoc,
+        ),
       );
       handlers.push(
         on(
@@ -689,7 +695,7 @@ function record<T = eventWithTime>(
             });
             if (recordAfter === 'load') init();
           },
-          window,
+          twindow,
         ),
       );
     }
