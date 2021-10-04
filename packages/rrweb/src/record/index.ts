@@ -20,6 +20,7 @@ import {
 } from '../utils';
 import type { recordOptions } from '../types';
 import {
+  IWindow,
   EventType,
   type eventWithoutTime,
   type eventWithTime,
@@ -695,7 +696,7 @@ function record<T = eventWithTime>(
             });
             if (recordAfter === 'load') init();
           },
-          twindow,
+          twindow as IWindow,
         ),
       );
     }
