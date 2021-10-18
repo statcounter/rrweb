@@ -436,6 +436,13 @@ function buildNode(
             value as string,
           ); // keep this attribute for rrweb to trigger showModal
         }
+        if (tagName === 'img' && name === 'rr_onErrorSrc') {
+          const img = node as HTMLImageElement;
+          img.onerror = () => {
+            img.onerror = null; // prevent infinite loop if `value` also fails
+            img.src = value as string;
+          };
+        }
       }
 
       if (n.isShadowHost) {
