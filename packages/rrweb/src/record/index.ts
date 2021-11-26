@@ -253,7 +253,8 @@ function record<T = eventWithTime>(
       !(
         e.type === EventType.IncrementalSnapshot &&
         e.data.source === IncrementalSource.Mutation
-      )
+      ) &&
+      !(e.type === EventType.Custom && e.data.tag === 'window-hidden')
     ) {
       let mtimestamp = e.timestamp;
       let idata = e.data as incrementalData;
