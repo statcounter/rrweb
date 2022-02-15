@@ -206,6 +206,7 @@ function record<T = eventWithTime>(
           headMetaRobots: true,
           headMetaHttpEquiv: true,
           headMetaVerification: true,
+          headMismatchedMedia: true,
           // the following are off for slimDOMOptions === true,
           // as they destroy some (hidden) info:
           headMetaAuthorship: _slimDOMOptions === 'all',

@@ -942,6 +942,14 @@ function slimDOMExcluded(
             lowerIfExists(sn.attributes.rel) === 'shortcut icon')))
     ) {
       return true;
+    } else if (
+      slimDOMOptions.headMismatchedMedia &&
+      sn.tagName === 'link' &&
+      lowerIfExists(sn.attributes.media) === 'print'
+    ) {
+      // could also do `window.matchMedia`, but then would have to watch for changes to viewport width
+      // with https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
+      return true;
     } else if (sn.tagName === 'meta') {
       if (
         slimDOMOptions.headMetaDescKeywords &&
@@ -1518,6 +1526,7 @@ function snapshot(
           headMetaAuthorship: true,
           headMetaVerification: true,
           adPlaceholder: slimDOM === 'all',
+          headMismatchedMedia: true,
         }
       : slimDOM === false
       ? {}

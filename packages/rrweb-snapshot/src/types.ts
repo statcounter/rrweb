@@ -70,6 +70,7 @@ export type SlimDOMOptions = Partial<{
    **/
   headTitleMutations: boolean;
   adPlaceholder: boolean;
+  headMismatchedMedia: boolean;
 }>;
 
 export type MaskTextFn = (text: string, element: HTMLElement | null) => string;
