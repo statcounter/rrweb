@@ -25,14 +25,16 @@ export type assetStatus = {
   timeout?: number;
 };
 
+export type topLeftOffset = {
+  top: number;
+  left: number;
+};
+
 export type fullSnapshotEvent = {
   type: EventType.FullSnapshot;
   data: {
     node: serializedNodeWithId;
-    initialOffset: {
-      top: number;
-      left: number;
-    };
+    initialOffset: topLeftOffset;
     /*
      * the assets associated with this snapshot
      * info is used to delay first FullSnapshot render until e.g. stylesheet

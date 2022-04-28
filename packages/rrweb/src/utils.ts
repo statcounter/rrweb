@@ -3,6 +3,7 @@ import type {
   listenerHandler,
   hookResetter,
   blockClass,
+  topLeftOffset,
   addedNodeMutation,
   DocumentDimension,
   IWindow,
@@ -136,7 +137,7 @@ if (!(/*@__PURE__*/ /[1-9][0-9]{12}/.test(Date.now().toString()))) {
 }
 export { nowTimestamp };
 
-export function getWindowScroll(win: Window) {
+export function getWindowScroll(win: Window): topLeftOffset {
   const doc = win.document;
   return {
     left: doc.scrollingElement
