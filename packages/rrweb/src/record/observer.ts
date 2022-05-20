@@ -283,21 +283,42 @@ function initMouseInteractionObserver({
       const htarget = target as Element;
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
-        if (
-          htarget.tagName.toLowerCase() === 'a' &&
-          (htarget as HTMLAnchorElement).href
-        ) {
-          href = (htarget as HTMLAnchorElement).href;
+        let targetId: string | null = null;
+        let targetText: string | null = null;
+        if (htarget.tagName.toLowerCase() === 'a') {
+          if ((htarget as HTMLAnchorElement).href) {
+            href = (htarget as HTMLAnchorElement).href;
+          }
+          targetText = (htarget as HTMLAnchorElement).innerText.substring(
+            0,
+            40,
+          );
         } else if (
           htarget.tagName.toLowerCase() === 'area' &&
           (htarget as HTMLAreaElement).href
         ) {
           href = (htarget as HTMLAreaElement).href;
+        } else if (htarget.tagName.toLowerCase() === 'button') {
+          targetText = (htarget as HTMLButtonElement).innerText.substring(
+            0,
+            40,
+          );
+        } else if (
+          htarget.tagName.toLowerCase() === 'input' &&
+          ((htarget as HTMLInputElement).type === 'submit' ||
+            (htarget as HTMLInputElement).type === 'button')
+        ) {
+          targetText = (htarget as HTMLInputElement).value.substring(0, 40);
         }
-        if (href !== null) {
+        if (htarget.id) {
+          targetId = (htarget as HTMLElement).id;
+        }
+        if (href !== null || targetId !== null || targetText !== null) {
           emissionEvent = {
             ...emissionEvent,
             href: href,
+            targetId: targetId,
+            targetText: targetText,
           };
         }
       }

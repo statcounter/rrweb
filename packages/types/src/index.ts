@@ -513,6 +513,8 @@ export type mouseInteractionParam = {
 
 export type clickParam = mouseInteractionParam & {
   href?: string;
+  targetId?: string;
+  targetText?: string;
 };
 
 export type mouseInteractionCallBack = (d: mouseInteractionParam) => void;
