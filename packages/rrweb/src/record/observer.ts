@@ -55,6 +55,7 @@ import type {
 import MutationBuffer from './mutation';
 import { callbackWrapper } from './error-handler';
 import dom, { mutationObserverCtor } from '@rrweb/utils';
+import { finder } from '@medv/finder';
 
 export const mutationBuffers: MutationBuffer[] = [];
 export let ongoingMove: ((now?: number) => void) | null = null;
@@ -218,10 +219,6 @@ function initMouseInteractionObserver({
   let currentPointerType: PointerTypes | null = null;
   const getHandler = (eventKey: keyof typeof MouseInteractions) => {
     return (event: MouseEvent | TouchEvent | PointerEvent) => {
-      const target = getEventTarget(event) as Node;
-      if (isBlocked(target, blockClass, blockSelector, true)) {
-        return;
-      }
       let pointerType: PointerTypes | null = null;
       let thisEventKey = eventKey;
       if ('pointerType' in event) {
@@ -271,8 +268,51 @@ function initMouseInteractionObserver({
       if (!e) {
         return;
       }
-      const id = mirror.getId(target);
       const { clientX, clientY } = e;
+
+      let target;
+      let htargetBound = null;
+
+      if (!clientX) {
+        target = getEventTarget(event) as Node;
+      } else {
+        // copy of getEventTarget taking into account clientX/clientY
+        target = event.target as Node;
+        try {
+          let path = [];
+          if ('composedPath' in event) {
+            path = event.composedPath();
+          } else if ('path' in event && event.path.length) {
+            path = event.path;
+          }
+          if (path.length) {
+            for (let i = 0; i < path.length; i++) {
+              if (path[i].nodeType == 9) {
+                target = path[i] as Node;
+                break;
+              }
+              htargetBound = (path[i] as Element).getBoundingClientRect();
+              if (
+                htargetBound.left < clientX &&
+                clientX < htargetBound.right &&
+                htargetBound.top < clientY &&
+                clientY < htargetBound.bottom
+              ) {
+                target = path[i] as Node;
+                break;
+              }
+            }
+          }
+        } catch {
+          target = event.target as Node;
+        }
+      }
+
+      if (isBlocked(target, blockClass, blockSelector, true)) {
+        return;
+      }
+      const id = mirror.getId(target);
+      const htarget = target as Element;
       let emissionEvent: mouseInteractionParam | clickParam = {
         type: MouseInteractions[thisEventKey],
         id,
@@ -280,10 +320,9 @@ function initMouseInteractionObserver({
         y: clientY,
         ...(pointerType !== null && { pointerType }),
       };
-      const htarget = target as Element;
+
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
-        let targetId: string | null = null;
         let targetText: string | null = null;
         if (htarget.tagName.toLowerCase() === 'a') {
           if ((htarget as HTMLAnchorElement).href) {
@@ -310,17 +349,26 @@ function initMouseInteractionObserver({
         ) {
           targetText = (htarget as HTMLInputElement).value.substring(0, 40);
         }
-        if (htarget.id) {
-          targetId = (htarget as HTMLElement).id;
-        }
-        if (href !== null || targetId !== null || targetText !== null) {
+        emissionEvent = {
+          ...emissionEvent,
+          href: href,
+          targetText: targetText,
+        };
+        try {
+          // finder doesn't work for target==HtmlDocument  (target.nodeType = 9)
+          const targetSelector = finder(target);
+          if (htargetBound === null) {
+            htargetBound = (target as Element).getBoundingClientRect();
+          }
           emissionEvent = {
             ...emissionEvent,
-            href: href,
-            targetId: targetId,
-            targetText: targetText,
+            targetSelector: targetSelector,
+            targetW: Math.round(10 * htargetBound.width) / 10,
+            targetH: Math.round(10 * htargetBound.height) / 10,
+            relX: Math.round(10 * (clientX - htargetBound.x)) / 10,
+            relY: Math.round(10 * (clientY - htargetBound.y)) / 10,
           };
-        }
+        } catch (e) {}
       }
       callbackWrapper(mouseInteractionCb)(emissionEvent);
     };
