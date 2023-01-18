@@ -728,10 +728,6 @@ function record<T = eventWithTime>(
       recording = false;
       unregisterErrorHandler();
       if (cleanup) {
-        let id: keyof typeof mirror.map;
-        for (id in mirror.map) {
-          delete mirror.map[id].__sn;
-        }
         cleanupSnapshot();
       }
     };
