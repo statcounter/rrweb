@@ -766,6 +766,9 @@ record.stop = (cleanup = true) => {
   stop(cleanup);
 };
 
+record.getWindowWidth = getWindowWidth;
+record.getWindowHeight = getWindowHeight;
+
 record.mirror = mirror;
 
 export default record;
