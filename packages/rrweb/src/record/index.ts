@@ -768,6 +768,7 @@ record.stop = (cleanup = true) => {
 
 record.getWindowWidth = getWindowWidth;
 record.getWindowHeight = getWindowHeight;
+record.getWindowScroll = getWindowScroll;
 
 record.mirror = mirror;
 
