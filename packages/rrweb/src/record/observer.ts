@@ -324,7 +324,9 @@ function initMouseInteractionObserver({
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
         let targetText: string | null = null;
-        if (htarget.tagName.toLowerCase() === 'a') {
+        if (!htarget.tagName) {
+          // could be the #document element
+        } else if (htarget.tagName.toLowerCase() === 'a') {
           if ((htarget as HTMLAnchorElement).href) {
             href = (htarget as HTMLAnchorElement).href;
           }
