@@ -34,6 +34,7 @@ import {
   inDom,
   getShadowHost,
   closestElementOfNode,
+  nowTimestamp,
 } from '../utils';
 import dom from '@rrweb/utils';
 import { isProcessingStyleElement } from './observers/asset-manager';
