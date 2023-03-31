@@ -353,8 +353,8 @@ function initMouseInteractionObserver({
         }
         emissionEvent = {
           ...emissionEvent,
-          href: href,
-          targetText: targetText,
+          ...(href && { href }),
+          ...(targetText && { targetText }),
         };
         try {
           // finder doesn't work for target==HtmlDocument  (target.nodeType = 9)
