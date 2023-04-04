@@ -217,6 +217,7 @@ function initMouseInteractionObserver({
 
   const handlers: listenerHandler[] = [];
   let currentPointerType: PointerTypes | null = null;
+  let mouseDown = null;
   const getHandler = (eventKey: keyof typeof MouseInteractions) => {
     return (event: MouseEvent | TouchEvent | PointerEvent) => {
       let pointerType: PointerTypes | null = null;
@@ -267,6 +268,17 @@ function initMouseInteractionObserver({
       const e = legacy_isTouchEvent(event) ? event.changedTouches[0] : event;
       if (!e) {
         return;
+      }
+      switch (MouseInteractions[eventKey]) {
+        case MouseInteractions.MouseDown:
+        case MouseInteractions.TouchStart:
+          mouseDown = {
+            pageX: e.pageX,
+            pageY: e.pageY,
+            clientX: e.clientX,
+            clientY: e.clientY,
+          };
+          break;
       }
       const { clientX, clientY } = e;
 
@@ -371,6 +383,33 @@ function initMouseInteractionObserver({
             relY: Math.round(10 * (clientY - htargetBound.y)) / 10,
           };
         } catch (e) {}
+      }
+      switch (MouseInteractions[eventKey]) {
+        case MouseInteractions.Click:
+        case MouseInteractions.MouseUp:
+        case MouseInteractions.TouchEnd:
+          if (mouseDown) {
+            const pageXDist = e.pageX - mouseDown.pageX,
+              pageYDist = e.pageY - mouseDown.pageY,
+              viewportXDist = clientX - mouseDown.clientX,
+              viewportYDist = clientY - mouseDown.clientY;
+            if (
+              pageXDist !== 0 ||
+              pageYDist !== 0 ||
+              viewportXDist !== 0 ||
+              viewportYDist !== 0
+            ) {
+              emissionEvent = {
+                ...emissionEvent,
+                pageXDist,
+                pageYDist,
+                viewportXDist,
+                viewportYDist,
+              };
+              mouseDown = null;
+            }
+          }
+          break;
       }
       callbackWrapper(mouseInteractionCb)(emissionEvent);
     };
