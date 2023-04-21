@@ -382,6 +382,22 @@ function initMouseInteractionObserver({
             relX: Math.round(10 * (clientX - htargetBound.x)) / 10,
             relY: Math.round(10 * (clientY - htargetBound.y)) / 10,
           };
+          try {
+            const firstRoundClasses = targetSelector.match(
+              /\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
+            );
+            const altTargetSelector = finder(target, {
+              className: (cn) =>
+                firstRoundClasses === null ||
+                firstRoundClasses.indexOf('.' + cn) < 0,
+            });
+            if (targetSelector !== altTargetSelector) {
+              emissionEvent = {
+                ...emissionEvent,
+                altTargetSelector: altTargetSelector,
+              };
+            }
+          } catch (e2) {}
         } catch (e) {}
       }
       switch (MouseInteractions[eventKey]) {
