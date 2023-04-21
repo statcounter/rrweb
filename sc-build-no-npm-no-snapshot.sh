@@ -9,7 +9,8 @@ sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.m
 
 if ! [[ -n $(diff /home/statcounter/rrweb/packages/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js) ]]; then
   # don't take next actions if only replay stuff has changed
-   exit 0
+   echo 'record unchanged'
+   #exit 0
 fi
 
 cp -f /home/statcounter/rrweb/packages/rrweb/dist/record/rrweb-record.js /home/statcounter/www/libs/rrweb/rrweb-record.js
