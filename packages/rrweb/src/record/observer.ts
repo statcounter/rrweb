@@ -82,6 +82,65 @@ function getEventTarget(event: Event | NonStandardEvent): EventTarget | null {
   return event && event.target;
 }
 
+// adapted from https://stackoverflow.com/a/49663134/6691
+const getStructuralPath = (el) => {
+  let path = [],
+    parent;
+  let unique_tags = {
+    DIV: false,
+    SPAN: false,
+  };
+  while ((parent = el.parentNode)) {
+    let tag = el.tagName,
+      siblings;
+    let id_or_tag;
+    let is_anon = tag === 'DIV' || tag === 'SPAN';
+    if (el.id) {
+      if (!is_anon) {
+        id_or_tag = `${tag.toLowerCase()}#${el.id}`;
+      } else {
+        id_or_tag = `#${el.id}`;
+      }
+    } else {
+      let siblings = parent.children;
+      let siblings_of_type = [].filter.call(
+        siblings,
+        (sibling) => sibling.tagName === tag,
+      );
+      if (siblings_of_type.length === 1) {
+        id_or_tag = tag;
+      } else if (is_anon && siblings.length === siblings_of_type.length) {
+        id_or_tag = `:nth-child(${1 + [].indexOf.call(siblings, el)})`;
+      } else {
+        id_or_tag = `${tag}:nth-of-type(${
+          1 + [].indexOf.call(siblings_of_type, el)
+        })`;
+      }
+    }
+    if (
+      path.length > 1 &&
+      (path[0] == 'DIV' || path[0] == 'SPAN') &&
+      el.querySelectorAll(`${path.slice(1).join(' > ')}`).length === 1
+    ) {
+      // skip single containing nodes
+      path = [`${id_or_tag} ${path.slice(1).join(' > ')}`];
+    } else {
+      path.unshift(id_or_tag);
+    }
+    if (el.id) {
+      break;
+    }
+    if (unique_tags[tag] === undefined) {
+      unique_tags[tag] = document.getElementsByTagName(tag).length === 1;
+    }
+    if (unique_tags[tag]) {
+      break;
+    }
+    el = parent;
+  }
+  return `${path.join(' > ')}`.toLowerCase();
+};
+
 export function initMutationObserver(
   options: MutationBufferParam,
   rootEl: Node,
@@ -368,6 +427,12 @@ function initMouseInteractionObserver({
           ...(href && { href }),
           ...(targetText && { targetText }),
         };
+        if (target.classList && target.classList.length) {
+          emissionEvent = {
+            ...emissionEvent,
+            targetClasses: Array.from(target.classList),
+          };
+        }
         try {
           // finder doesn't work for target==HtmlDocument  (target.nodeType = 9)
           const targetSelector = finder(target);
@@ -382,15 +447,17 @@ function initMouseInteractionObserver({
             relX: Math.round(10 * (clientX - htargetBound.x)) / 10,
             relY: Math.round(10 * (clientY - htargetBound.y)) / 10,
           };
+          let altTargetSelector = '';
           try {
             const firstRoundClasses = targetSelector.match(
               /\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
             );
-            const altTargetSelector = finder(target, {
+            altTargetSelector = finder(target, {
               className: (cn) =>
                 firstRoundClasses === null ||
                 firstRoundClasses.indexOf('.' + cn) < 0,
             });
+            // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
               emissionEvent = {
                 ...emissionEvent,
@@ -398,6 +465,42 @@ function initMouseInteractionObserver({
               };
             }
           } catch (e2) {}
+          try {
+            const closest_with_id = target.parentNode.closest('[id]');
+            if (closest_with_id) {
+              let byIdTargetSelector = finder(target, {
+                root: closest_with_id,
+              });
+              if (targetSelector !== byIdTargetSelector) {
+                // only add the id if it changes how uniqueness is calculated
+                byIdTargetSelector =
+                  '#' + closest_with_id.id + ' ' + byIdTargetSelector;
+                if (
+                  targetSelector !== byIdTargetSelector &&
+                  byIdTargetSelector !== altTargetSelector
+                ) {
+                  emissionEvent = {
+                    ...emissionEvent,
+                    byIdTargetSelector: byIdTargetSelector,
+                  };
+                }
+              }
+            }
+          } catch (e3) {}
+          try {
+            const structuralTargetSelector = getStructuralPath(target);
+            const res = document.querySelectorAll(structuralTargetSelector);
+            if (
+              res.length === 1 &&
+              res[0] === target &&
+              structuralTargetSelector.length < 500
+            ) {
+              emissionEvent = {
+                ...emissionEvent,
+                structuralTargetSelector: structuralTargetSelector,
+              };
+            }
+          } catch (e4) {}
         } catch (e) {}
       }
       switch (MouseInteractions[eventKey]) {
