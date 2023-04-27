@@ -493,7 +493,7 @@ function initMouseInteractionObserver({
               if (targetSelector !== byIdTargetSelector) {
                 // only add the id if it changes how uniqueness is calculated
                 byIdTargetSelector =
-                  '#' + closest_with_id.id + ' ' + byIdTargetSelector;
+                  finder(closest_with_id) + ' ' + byIdTargetSelector;
                 if (
                   targetSelector !== byIdTargetSelector &&
                   byIdTargetSelector !== altTargetSelector
