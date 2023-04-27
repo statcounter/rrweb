@@ -348,6 +348,7 @@ function initMouseInteractionObserver({
         target = getEventTarget(event) as Node;
       } else {
         // copy of getEventTarget taking into account clientX/clientY
+        // (this seems redundant now)
         target = event.target as Node;
         try {
           let path = [];
@@ -383,7 +384,7 @@ function initMouseInteractionObserver({
         return;
       }
       const id = mirror.getId(target);
-      const htarget = target as Element;
+      let htarget = target as Element;
       let emissionEvent: mouseInteractionParam | clickParam = {
         type: MouseInteractions[thisEventKey],
         id,
@@ -395,6 +396,22 @@ function initMouseInteractionObserver({
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
         let targetText: string | null = null;
+
+        let sig_target = htarget.closest(
+          'a[href],area[href],button,input[type="submit"],input[type="button"]',
+        );
+        if (sig_target && sig_target !== htarget) {
+          let sTargetBound = sig_target.getBoundingClientRect();
+          if (
+            sTargetBound.left < clientX &&
+            clientX < sTargetBound.right &&
+            sTargetBound.top < clientY &&
+            clientY < sTargetBound.bottom
+          ) {
+            htarget = sig_target;
+          }
+        }
+
         if (!htarget.tagName) {
           // could be the #document element
         } else if (htarget.tagName.toLowerCase() === 'a') {
@@ -427,17 +444,18 @@ function initMouseInteractionObserver({
           ...(href && { href }),
           ...(targetText && { targetText }),
         };
-        if (target.classList && target.classList.length) {
+        if (htarget.classList && htarget.classList.length) {
           emissionEvent = {
             ...emissionEvent,
-            targetClasses: Array.from(target.classList),
+            targetClasses: Array.from(htarget.classList),
           };
         }
+
         try {
-          // finder doesn't work for target==HtmlDocument  (target.nodeType = 9)
-          const targetSelector = finder(target);
+          // finder doesn't work for target==HtmlDocument  (htarget.nodeType = 9)
+          const targetSelector = finder(htarget);
           if (htargetBound === null) {
-            htargetBound = (target as Element).getBoundingClientRect();
+            htargetBound = (htarget as Element).getBoundingClientRect();
           }
           emissionEvent = {
             ...emissionEvent,
@@ -452,7 +470,7 @@ function initMouseInteractionObserver({
             const firstRoundClasses = targetSelector.match(
               /\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
             );
-            altTargetSelector = finder(target, {
+            altTargetSelector = finder(htarget, {
               className: (cn) =>
                 firstRoundClasses === null ||
                 firstRoundClasses.indexOf('.' + cn) < 0,
@@ -468,7 +486,7 @@ function initMouseInteractionObserver({
           try {
             const closest_with_id = target.parentNode.closest('[id]');
             if (closest_with_id) {
-              let byIdTargetSelector = finder(target, {
+              let byIdTargetSelector = finder(htarget, {
                 root: closest_with_id,
               });
               if (targetSelector !== byIdTargetSelector) {
@@ -488,11 +506,11 @@ function initMouseInteractionObserver({
             }
           } catch (e3) {}
           try {
-            const structuralTargetSelector = getStructuralPath(target);
+            const structuralTargetSelector = getStructuralPath(htarget);
             const res = document.querySelectorAll(structuralTargetSelector);
             if (
               res.length === 1 &&
-              res[0] === target &&
+              res[0] === htarget &&
               structuralTargetSelector.length < 500
             ) {
               emissionEvent = {
