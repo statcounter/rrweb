@@ -443,6 +443,7 @@ function initMouseInteractionObserver({
           ...emissionEvent,
           ...(href && { href }),
           ...(targetText && { targetText }),
+          targetTagName: htarget.tagName,
         };
         if (htarget.classList && htarget.classList.length) {
           emissionEvent = {
