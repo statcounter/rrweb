@@ -400,44 +400,36 @@ function initMouseInteractionObserver({
         let sig_target = htarget.closest(
           'a[href],area[href],button,input[type="submit"],input[type="button"]',
         );
-        if (sig_target && sig_target !== htarget) {
-          let sTargetBound = sig_target.getBoundingClientRect();
-          if (
-            sTargetBound.left < clientX &&
-            clientX < sTargetBound.right &&
-            sTargetBound.top < clientY &&
-            clientY < sTargetBound.bottom
-          ) {
-            htarget = sig_target;
-          }
+        if (!sig_target) {
+          sig_target = htarget;
         }
 
-        if (!htarget.tagName) {
+        if (!sig_target.tagName) {
           // could be the #document element
-        } else if (htarget.tagName.toLowerCase() === 'a') {
-          if ((htarget as HTMLAnchorElement).href) {
-            href = (htarget as HTMLAnchorElement).href;
+        } else if (sig_target.tagName.toLowerCase() === 'a') {
+          if ((sig_target as HTMLAnchorElement).href) {
+            href = (sig_target as HTMLAnchorElement).href;
           }
-          targetText = (htarget as HTMLAnchorElement).innerText.substring(
+          targetText = (sig_target as HTMLAnchorElement).innerText.substring(
             0,
             40,
           );
         } else if (
-          htarget.tagName.toLowerCase() === 'area' &&
-          (htarget as HTMLAreaElement).href
+          sig_target.tagName.toLowerCase() === 'area' &&
+          (sig_target as HTMLAreaElement).href
         ) {
-          href = (htarget as HTMLAreaElement).href;
-        } else if (htarget.tagName.toLowerCase() === 'button') {
-          targetText = (htarget as HTMLButtonElement).innerText.substring(
+          href = (sig_target as HTMLAreaElement).href;
+        } else if (sig_target.tagName.toLowerCase() === 'button') {
+          targetText = (sig_target as HTMLButtonElement).innerText.substring(
             0,
             40,
           );
         } else if (
-          htarget.tagName.toLowerCase() === 'input' &&
-          ((htarget as HTMLInputElement).type === 'submit' ||
-            (htarget as HTMLInputElement).type === 'button')
+          sig_target.tagName.toLowerCase() === 'input' &&
+          ((sig_target as HTMLInputElement).type === 'submit' ||
+            (sig_target as HTMLInputElement).type === 'button')
         ) {
-          targetText = (htarget as HTMLInputElement).value.substring(0, 40);
+          targetText = (sig_target as HTMLInputElement).value.substring(0, 40);
         }
         emissionEvent = {
           ...emissionEvent,
@@ -449,6 +441,13 @@ function initMouseInteractionObserver({
           emissionEvent = {
             ...emissionEvent,
             targetClasses: Array.from(htarget.classList),
+          };
+        }
+
+        if (htarget !== sig_target) {
+          emissionEvent = {
+            ...emissionEvent,
+            sigTargetTagName: sig_target.tagName,
           };
         }
 
