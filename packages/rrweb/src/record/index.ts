@@ -435,6 +435,7 @@ function record<T = eventWithTime>(
           width: getWindowWidth(),
           height: getWindowHeight(),
           devicePixelRatio: window.devicePixelRatio,
+          pointerFine: matchMedia('(pointer:fine)').matches, // refers to the primary pointer; a laptop with a mouse and a touchscreen will report fine
         },
       },
       isCheckout,
