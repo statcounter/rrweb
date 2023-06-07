@@ -467,10 +467,15 @@ function initMouseInteractionObserver({
           };
           let altTargetSelector = '';
           try {
+            const firstRoundIds = targetSelector.match(
+              /#-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
+            );
             const firstRoundClasses = targetSelector.match(
               /\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
             );
             altTargetSelector = finder(htarget, {
+              idName: (idn) =>
+                firstRoundIds === null || firstRoundIds.indexOf('#' + idn) < 0,
               className: (cn) =>
                 firstRoundClasses === null ||
                 firstRoundClasses.indexOf('.' + cn) < 0,
