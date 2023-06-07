@@ -524,6 +524,21 @@ function initMouseInteractionObserver({
               };
             }
           } catch (e4) {}
+          if (target.getAttribute('alt')) {
+            const alt_value = target.getAttribute('alt');
+            const altAttributeSelector = '[alt="' + alt_value + '"]';
+            const others_with_alt =
+              document.querySelectorAll(altAttributeSelector);
+            if (
+              others_with_alt.length === 1 &&
+              others_with_alt[0] === htarget
+            ) {
+              emissionEvent = {
+                ...emissionEvent,
+                altAttributeSelector: altAttributeSelector,
+              };
+            }
+          }
         } catch (e) {}
       }
       switch (MouseInteractions[eventKey]) {
