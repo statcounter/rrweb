@@ -552,21 +552,28 @@ function initMouseInteractionObserver({
               };
             }
           } catch (e4) {}
-          if (target.getAttribute('alt')) {
-            const alt_value = target.getAttribute('alt');
-            const altAttributeSelector = '[alt="' + alt_value + '"]';
-            const others_with_alt =
-              document.querySelectorAll(altAttributeSelector);
-            if (
-              others_with_alt.length === 1 &&
-              others_with_alt[0] === htarget
-            ) {
-              emissionEvent = {
-                ...emissionEvent,
-                altAttributeSelector: altAttributeSelector,
-              };
+          const camelizeRE = /-([a-z])/g;
+          const camelize = (str: string): string => {
+            return str.replace(camelizeRE, (_, c: string) =>
+              c ? c.toUpperCase() : '',
+            );
+          };
+          ['alt', 'aria-label', 'title', 'placeholder'].forEach((tattr) => {
+            const alt_value = target.getAttribute(tattr);
+            if (alt_value && alt_value.length < 40) {
+              const altAttributeSelector =
+                '[' + tattr + '="' + alt_value + '"]';
+              const others_with_alt =
+                document.querySelectorAll(altAttributeSelector);
+              const attr_name = camelize(tattr) + 'AttrSelector';
+              if (
+                others_with_alt.length === 1 &&
+                others_with_alt[0] === htarget
+              ) {
+                emissionEvent[attr_name] = altAttributeSelector;
+              }
             }
-          }
+          });
         } catch (e) {}
       }
       switch (MouseInteractions[eventKey]) {
