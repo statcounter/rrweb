@@ -65,6 +65,28 @@ type NonStandardEvent = Omit<Event, 'composedPath'> & {
   path: EventTarget[];
 };
 
+function rejectFrameworkClasses(className: string): boolean {
+  if (
+    className.startsWith('styled__') ||
+    className.startsWith('sc-') ||
+    className.indexOf('__sc-') !== -1
+  ) {
+    return false; // styled components / react
+  } else if (className.match(/^jss[0-9]+$/)) {
+    return false; // React.js
+  }
+  return true;
+}
+
+function rejectFrameworkIds(idName: string): boolean {
+  if (idName.match(/^ember[0-9]+$/)) {
+    return false; // ember.js
+  } else if (idName.match(/^yui/)) {
+    return false; // YUI framework by yahoo
+  }
+  return true;
+}
+
 function getEventTarget(event: Event | NonStandardEvent): EventTarget | null {
   try {
     if ('composedPath' in event) {
@@ -453,7 +475,10 @@ function initMouseInteractionObserver({
 
         try {
           // finder doesn't work for target==HtmlDocument  (htarget.nodeType = 9)
-          const targetSelector = finder(htarget);
+          const targetSelector = finder(htarget, {
+            idName: rejectFrameworkIds,
+            className: rejectFrameworkClasses,
+          });
           if (htargetBound === null) {
             htargetBound = (htarget as Element).getBoundingClientRect();
           }
@@ -475,10 +500,13 @@ function initMouseInteractionObserver({
             );
             altTargetSelector = finder(htarget, {
               idName: (idn) =>
-                firstRoundIds === null || firstRoundIds.indexOf('#' + idn) < 0,
+                rejectFrameworkIds(idn) &&
+                (firstRoundIds === null ||
+                  firstRoundIds.indexOf('#' + idn) < 0),
               className: (cn) =>
-                firstRoundClasses === null ||
-                firstRoundClasses.indexOf('.' + cn) < 0,
+                rejectFrameworkClasses(cn) &&
+                (firstRoundClasses === null ||
+                  firstRoundClasses.indexOf('.' + cn) < 0),
             });
             // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
