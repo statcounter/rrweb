@@ -552,6 +552,18 @@ function initMouseInteractionObserver({
               };
             }
           } catch (e4) {}
+          try {
+            const noNumericTargetSelector = finder(htarget, {
+              idName: (idn) => !idn.match(/[0-9]/),
+              className: (cn) => !idn.match(/[0-9]/),
+            });
+            if (targetSelector !== noNumericTargetSelector) {
+              emissionEvent = {
+                ...emissionEvent,
+                noNumericTargetSelector: noNumericTargetSelector,
+              };
+            }
+          } catch (e5) {}
           const camelizeRE = /-([a-z])/g;
           const camelize = (str: string): string => {
             return str.replace(camelizeRE, (_, c: string) =>
