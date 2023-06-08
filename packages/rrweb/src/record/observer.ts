@@ -546,10 +546,15 @@ function initMouseInteractionObserver({
               res[0] === htarget &&
               structuralTargetSelector.length < 500
             ) {
-              emissionEvent = {
-                ...emissionEvent,
-                structuralTargetSelector: structuralTargetSelector,
-              };
+              if (
+                targetSelector !== structuralTargetSelector &&
+                structuralTargetSelector !== altTargetSelector
+              ) {
+                emissionEvent = {
+                  ...emissionEvent,
+                  structuralTargetSelector: structuralTargetSelector,
+                };
+              }
             }
           } catch (e4) {}
           try {
