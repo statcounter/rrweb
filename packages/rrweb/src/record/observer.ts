@@ -117,7 +117,7 @@ const getStructuralPath = (el) => {
       siblings;
     let id_or_tag;
     let is_anon = tag === 'DIV' || tag === 'SPAN';
-    if (el.id) {
+    if (el.id && !el.id.match(/[0-9]/)) {
       if (!is_anon) {
         id_or_tag = `${tag.toLowerCase()}#${el.id}`;
       } else {
