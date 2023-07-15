@@ -23,5 +23,5 @@ cp -f /home/statcounter/rrweb/packages/rrweb/dist/record/rrweb-record.min.js "/h
 sed -i "s|var rrweb_version = '.*';  // DEBUG|var rrweb_version = '$RRWEBV';  // DEBUG|g" -- /home/statcounter/www/counter/recorder_test_uncompressed.js
 touch /home/statcounter/www/counter/recorder_test_uncompressed.js
 cd ..
-./pack_counter.py --rrweb
+./pack_counter.py --rrweb --test-only
 cd - &> /dev/null
