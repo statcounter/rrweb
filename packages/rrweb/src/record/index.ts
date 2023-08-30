@@ -436,6 +436,7 @@ function record<T = eventWithTime>(
           height: getWindowHeight(),
           devicePixelRatio: window.devicePixelRatio,
           pointerFine: matchMedia('(pointer:fine)').matches, // refers to the primary pointer; a laptop with a mouse and a touchscreen will report fine
+          initialOffset: getWindowScroll(twindow),
         },
       },
       isCheckout,
