@@ -441,6 +441,9 @@ function buildNode(
           img.onerror = () => {
             img.onerror = null; // prevent infinite loop if `value` also fails
             img.src = value as string;
+            if (specialAttributes['rr_onErrorSrcset']) {
+              img.srcset = specialAttributes['rr_onErrorSrcset'] as string;
+            }
           };
         }
       }
