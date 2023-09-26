@@ -417,6 +417,7 @@ function initMouseInteractionObserver({
 
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
+        let src: string | null = null;
         let targetText: string | null = null;
 
         let sig_target = htarget.closest(
@@ -452,10 +453,13 @@ function initMouseInteractionObserver({
             (sig_target as HTMLInputElement).type === 'button')
         ) {
           targetText = (sig_target as HTMLInputElement).value.substring(0, 40);
+        } else if (sig_target.tagName.toLowerCase() === 'img') {
+          src = (sig_target as HTMLAnchorElement).src;
         }
         emissionEvent = {
           ...emissionEvent,
           ...(href && { href }),
+          ...(src && { src }),
           ...(targetText && { targetText }),
           targetTagName: htarget.tagName,
         };
