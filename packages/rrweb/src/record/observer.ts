@@ -420,9 +420,11 @@ function initMouseInteractionObserver({
         let src: string | null = null;
         let targetText: string | null = null;
 
-        let sig_target = htarget.closest(
-          'a[href],area[href],button,input[type="submit"],input[type="button"]',
-        );
+        let sig_target =
+          htarget.closest &&
+          htarget.closest(
+            'a[href],area[href],button,input[type="submit"],input[type="button"]',
+          );
         if (!sig_target) {
           sig_target = htarget;
         }
