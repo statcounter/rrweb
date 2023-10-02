@@ -91,6 +91,18 @@ function rejectFrameworkIds(idName: string): boolean {
   return true;
 }
 
+function acceptHrefSrcs(name: string, value: string): boolean {
+  if (
+    (name === 'href' || name === 'src') &&
+    !value.includes('?') &&
+    value.length < 40
+  ) {
+    // intention is <a href="reasonable">
+    return true;
+  }
+  return false;
+}
+
 function getEventTarget(event: Event | NonStandardEvent): EventTarget | null {
   try {
     if ('composedPath' in event) {
@@ -488,6 +500,7 @@ function initMouseInteractionObserver({
           const targetSelector = finder(htarget, {
             idName: rejectFrameworkIds,
             className: rejectFrameworkClasses,
+            attr: acceptHrefSrcs,
           });
           if (htargetBound === null) {
             htargetBound = (htarget as Element).getBoundingClientRect();
