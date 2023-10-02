@@ -74,6 +74,8 @@ function rejectFrameworkClasses(className: string): boolean {
     return false; // styled components / react
   } else if (className.match(/^jss[0-9]+$/)) {
     return false; // React.js
+  } else if (className.match(/[0-9a-fA-F]{32}/)) {
+    return false; // contains a generated UUID
   }
   return true;
 }
@@ -83,6 +85,8 @@ function rejectFrameworkIds(idName: string): boolean {
     return false; // ember.js
   } else if (idName.match(/^yui/)) {
     return false; // YUI framework by yahoo
+  } else if (idName.match(/[0-9a-fA-F]{32}/)) {
+    return false; // contains a generated UUID
   }
   return true;
 }
