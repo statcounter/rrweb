@@ -65,7 +65,7 @@ type NonStandardEvent = Omit<Event, 'composedPath'> & {
   path: EventTarget[];
 };
 
-function rejectFrameworkClasses(className: string): boolean {
+function rejectCertainClasses(className: string): boolean {
   if (
     className.startsWith('styled__') ||
     className.startsWith('sc-') ||
@@ -76,6 +76,19 @@ function rejectFrameworkClasses(className: string): boolean {
     return false; // React.js
   } else if (className.match(/[0-9a-fA-F]{32}/)) {
     return false; // contains a generated UUID
+  } else if (
+    [
+      'active',
+      'selected',
+      'hover',
+      'hidden',
+      'collapsed',
+      'pressed',
+      'animating',
+      'finished',
+    ].includes(className)
+  ) {
+    return false; // represent states
   }
   return true;
 }
@@ -499,7 +512,7 @@ function initMouseInteractionObserver({
           // finder doesn't work for target==HtmlDocument  (htarget.nodeType = 9)
           const targetSelector = finder(htarget, {
             idName: rejectFrameworkIds,
-            className: rejectFrameworkClasses,
+            className: rejectCertainClasses,
             attr: acceptHrefSrcs,
           });
           if (htargetBound === null) {
@@ -527,7 +540,7 @@ function initMouseInteractionObserver({
                 (firstRoundIds === null ||
                   firstRoundIds.indexOf('#' + idn) < 0),
               className: (cn) =>
-                rejectFrameworkClasses(cn) &&
+                rejectCertainClasses(cn) &&
                 (firstRoundClasses === null ||
                   firstRoundClasses.indexOf('.' + cn) < 0),
             });
