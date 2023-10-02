@@ -557,11 +557,18 @@ function initMouseInteractionObserver({
             if (closest_with_id) {
               let byIdTargetSelector = finder(htarget, {
                 root: closest_with_id,
+                idName: rejectFrameworkIds,
+                className: rejectCertainClasses,
               });
               if (targetSelector !== byIdTargetSelector) {
                 // only add the id if it changes how uniqueness is calculated
                 byIdTargetSelector =
-                  finder(closest_with_id) + ' ' + byIdTargetSelector;
+                  finder(closest_with_id, {
+                    idName: rejectFrameworkIds,
+                    className: rejectCertainClasses,
+                  }) +
+                  ' ' +
+                  byIdTargetSelector;
                 if (
                   targetSelector !== byIdTargetSelector &&
                   byIdTargetSelector !== altTargetSelector
