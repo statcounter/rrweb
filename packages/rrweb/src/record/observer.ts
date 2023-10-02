@@ -182,7 +182,7 @@ const getStructuralPath = (el) => {
     } else {
       path.unshift(id_or_tag);
     }
-    if (el.id) {
+    if (el.id && !el.id.match(/[0-9]/)) {
       break;
     }
     if (unique_tags[tag] === undefined) {
