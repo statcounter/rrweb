@@ -116,6 +116,10 @@ function acceptHrefSrcs(name: string, value: string): boolean {
   return false;
 }
 
+function noCommonTags(name: string): boolean {
+  return !['div', 'span'].includes(name);
+}
+
 function getEventTarget(event: Event | NonStandardEvent): EventTarget | null {
   try {
     if ('composedPath' in event) {
@@ -514,6 +518,7 @@ function initMouseInteractionObserver({
             idName: rejectFrameworkIds,
             className: rejectCertainClasses,
             attr: acceptHrefSrcs,
+            tagName: noCommonTags,
           });
           if (htargetBound === null) {
             htargetBound = (htarget as Element).getBoundingClientRect();
@@ -543,6 +548,7 @@ function initMouseInteractionObserver({
                 rejectCertainClasses(cn) &&
                 (firstRoundClasses === null ||
                   firstRoundClasses.indexOf('.' + cn) < 0),
+              tagName: noCommonTags,
             });
             // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
@@ -559,6 +565,7 @@ function initMouseInteractionObserver({
                 root: closest_with_id,
                 idName: rejectFrameworkIds,
                 className: rejectCertainClasses,
+                tagName: noCommonTags,
               });
               if (targetSelector !== byIdTargetSelector) {
                 // only add the id if it changes how uniqueness is calculated
@@ -566,6 +573,7 @@ function initMouseInteractionObserver({
                   finder(closest_with_id, {
                     idName: rejectFrameworkIds,
                     className: rejectCertainClasses,
+                    tagName: noCommonTags,
                   }) +
                   ' ' +
                   byIdTargetSelector;
