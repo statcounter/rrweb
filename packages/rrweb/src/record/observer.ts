@@ -450,6 +450,7 @@ function initMouseInteractionObserver({
 
       if (MouseInteractions[eventKey] === MouseInteractions.Click) {
         let href: string | null = null;
+        let hrefAttr: string | null = null;
         let src: string | null = null;
         let targetText: string | null = null;
 
@@ -466,7 +467,8 @@ function initMouseInteractionObserver({
           // could be the #document element
         } else if (sig_target.tagName.toLowerCase() === 'a') {
           if ((sig_target as HTMLAnchorElement).href) {
-            href = (sig_target as HTMLAnchorElement).href;
+            href = (sig_target as HTMLAnchorElement).href; // this is worse for matching as resolves to a full absolute URL
+            hrefAttr = (sig_target as HTMLAnchorElement).getAttribute('href');
           }
           targetText = (sig_target as HTMLAnchorElement).innerText.substring(
             0,
@@ -476,7 +478,8 @@ function initMouseInteractionObserver({
           sig_target.tagName.toLowerCase() === 'area' &&
           (sig_target as HTMLAreaElement).href
         ) {
-          href = (sig_target as HTMLAreaElement).href;
+          href = (sig_target as HTMLAreaElement).href; // this is worse for matching as resolves to a full absolute URL
+          hrefAttr = (sig_target as HTMLAnchorElement).getAttribute('href');
         } else if (sig_target.tagName.toLowerCase() === 'button') {
           targetText = (sig_target as HTMLButtonElement).innerText.substring(
             0,
@@ -494,6 +497,7 @@ function initMouseInteractionObserver({
         emissionEvent = {
           ...emissionEvent,
           ...(href && { href }),
+          ...(hrefAttr && { hrefAttr }),
           ...(src && { src }),
           ...(targetText && { targetText }),
           targetTagName: htarget.tagName,
