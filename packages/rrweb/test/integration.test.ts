@@ -432,6 +432,17 @@ describe('record integration tests', function (this: ISuite) {
     await assertSnapshot(snapshots);
   });
 
+  it('can record shorthand properties defined via variables', async () => {
+    const page: puppeteer.Page = await browser.newPage();
+    await page.goto(`${serverURL}/html`);
+    await page.waitForTimeout(10);
+    await page.setContent(getHtml.call(this, 'animation-var.html'));
+    const snapshots = (await page.evaluate(
+      'window.snapshots',
+    )) as eventWithTime[];
+    assertSnapshot(snapshots);
+  });
+
   it('can record style changes compactly and preserve css var() functions', async () => {
     const page: puppeteer.Page = await browser.newPage();
     await page.goto('about:blank');
