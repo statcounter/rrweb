@@ -314,6 +314,7 @@ function initMouseInteractionObserver({
   mouseInteractionCb,
   doc,
   mirror,
+  triangulateClicks,
   blockClass,
   blockSelector,
   sampling,
@@ -448,7 +449,10 @@ function initMouseInteractionObserver({
         ...(pointerType !== null && { pointerType }),
       };
 
-      if (MouseInteractions[eventKey] === MouseInteractions.Click) {
+      if (
+        MouseInteractions[eventKey] === MouseInteractions.Click &&
+        triangulateClicks
+      ) {
         let href: string | null = null;
         let hrefAttr: string | null = null;
         let src: string | null = null;

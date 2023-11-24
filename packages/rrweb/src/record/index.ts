@@ -100,6 +100,7 @@ function record<T = eventWithTime>(
     dataURLOptions = {},
     mousemoveWait,
     recordDOM = true,
+    triangulateClicks = false,
     recordCanvas = false,
     recordCrossOriginIframes = false,
     recordAfter = options.recordAfter === 'DOMContentLoaded'
@@ -623,6 +624,7 @@ function record<T = eventWithTime>(
           inlineStylesheet,
           sampling,
           recordDOM,
+          triangulateClicks,
           recordCanvas,
           userTriggeredOnInput,
           collectFonts,
