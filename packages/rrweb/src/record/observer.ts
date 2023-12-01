@@ -97,6 +97,8 @@ function rejectFrameworkIds(idName: string): boolean {
   if (idName.match(/^ember[0-9]+$/)) {
     return false; // ember.js
   } else if (idName.match(/^yui/)) {
+    //  		      <div id="sm-page-widget-G8Fztrxf"
+    // also has <div id="sm-page-widget-H69TvXpn" class="sm-page-widget-body">
     return false; // YUI framework by yahoo
   } else if (idName.match(/[0-9a-fA-F]{32}/)) {
     return false; // contains a generated UUID
