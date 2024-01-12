@@ -564,7 +564,8 @@ export function buildNodeWithSN(
 
   if (
     (n.type === NodeType.Document || n.type === NodeType.Element) &&
-    !skipChild
+    !skipChild &&
+    Array.isArray(n.childNodes)
   ) {
     for (const childN of n.childNodes) {
       const childNode = buildNodeWithSN(childN, {
