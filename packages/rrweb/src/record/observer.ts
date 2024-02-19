@@ -525,6 +525,7 @@ function initMouseInteractionObserver({
         try {
           // finder doesn't work for target==HtmlDocument  (htarget.nodeType = 9)
           const targetSelector = finder(htarget, {
+            root: doc.body,
             idName: rejectFrameworkIds,
             className: rejectCertainClasses,
             attr: acceptHrefSrcs,
@@ -550,6 +551,7 @@ function initMouseInteractionObserver({
               /\.-?[_a-zA-Z]+[_a-zA-Z0-9-]*/g,
             );
             altTargetSelector = finder(htarget, {
+              root: doc.body,
               idName: (idn) =>
                 rejectFrameworkIds(idn) &&
                 (firstRoundIds === null ||
@@ -581,6 +583,7 @@ function initMouseInteractionObserver({
                 // only add the id if it changes how uniqueness is calculated
                 byIdTargetSelector =
                   finder(closest_with_id, {
+                    root: doc.body,
                     idName: rejectFrameworkIds,
                     className: rejectCertainClasses,
                     tagName: noCommonTags,
@@ -620,6 +623,7 @@ function initMouseInteractionObserver({
           } catch (e4) {}
           try {
             const noNumericTargetSelector = finder(htarget, {
+              root: doc.body,
               idName: (idn) => !idn.match(/[0-9]/),
               className: (cn) => !idn.match(/[0-9]/),
             });
