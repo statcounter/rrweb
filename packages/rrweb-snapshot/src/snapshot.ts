@@ -1226,6 +1226,26 @@ export function serializeNodeWithId(
 
     if (
       serializedNode.type === NodeType.Element &&
+      serializedNode.tagName === 'style' &&
+      !inlineStylesheet &&
+      ((serializedNode as elementNode).attributes['data-href'] !== undefined ||
+        (serializedNode as elementNode).attributes['data-url'] !== undefined)
+    ) {
+      // avoid parsing this inline <style> element when there's an external one available
+      serializedNode.tagName = 'link';
+      serializedNode.attributes.rel = 'stylesheet';
+      let data_h = 'data-href';
+      if (
+        (serializedNode as elementNode).attributes['data-href'] === undefined
+      ) {
+        // this is rarer but I encountered it on the same website view-source:https://www.teracryption.com/
+        data_h = 'data-url';
+      }
+      serializedNode.attributes.href = serializedNode.attributes[data_h];
+      delete serializedNode.attributes[data_h];
+    } // statcounter above
+    else if (
+      serializedNode.type === NodeType.Element &&
       serializedNode.tagName === 'textarea' &&
       (serializedNode as elementNode).attributes.value !== undefined
     ) {
