@@ -22,6 +22,7 @@ import {
   EventType,
   type eventWithoutTime,
   type eventWithTime,
+  type incrementalData,
   IncrementalSource,
   type listenerHandler,
   type mutationCallbackParam,
@@ -243,10 +244,11 @@ function record<T = eventWithTime>(
       )
     ) {
       let mtimestamp = e.timestamp;
-      if ('positions' in e.data && e.data.positions[0].timeOffset) {
+      let idata = e.data as incrementalData;
+      if ('positions' in idata && idata.positions[0].timeOffset) {
         // assign the mutation timestamp to the beginning
         // of mouse/touch movement
-        mtimestamp += e.data.positions[0].timeOffset;
+        mtimestamp += idata.positions[0].timeOffset;
       }
       // we've got a user initiated event so first we need to apply
       // all DOM changes that have been buffering during paused state
