@@ -188,6 +188,37 @@ describe('record integration tests', function (this: ISuite) {
     ]);
   });
 
+  it('can adapt non-inlined 3rd party stylesheets', () => {
+    const page: puppeteer.Page = await browser.newPage();
+    page.on('console', (msg) => console.log(msg.text()));
+
+    const waitForStylesheetAssets = 100;
+
+    await page.goto(`${serverURL}/html`);
+    await page.setContent(
+      getHtml.call(this, 'cors-style-sheet.html', {
+        captureAssets: {
+          stylesheets: false,
+        },
+      }),
+    );
+
+    await page.hover('a[href]');
+
+    const snapshots = (await page.evaluate(
+      'window.snapshots',
+    )) as eventWithTime[];
+
+    const replayStyleValue = await page.evaluate(`
+      const { Replayer } = rrweb;
+      const replayer = new Replayer(window.snapshots);
+      replayer.pause((e.timestamp - window.snapshots[window.snapshots.length - 1].timestamp)+1);
+      let anchorStyle = getComputedStyle(replayer.iframe.contentDocument.querySelector('a[href]'))
+      anchorStyle['background-color'];
+`);
+    expect(replayStyleValue).toEqual('#369');
+  });
+
   it('can record and replay style mutations', async () => {
     // This test shows that the `isStyle` attribute on textContent is not needed in a mutation
     // TODO: we could get a lot more elaborate here with mixed textContent and insertRule mutations
