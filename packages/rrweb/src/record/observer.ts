@@ -647,7 +647,9 @@ function initMouseInteractionObserver({
                 '[' + tattr + '="' + alt_value + '"]';
               const others_with_alt =
                 document.querySelectorAll(altAttributeSelector);
-              const attr_name = camelize(tattr) + 'AttrSelector';
+              const attr_name: `${string}AttrSelector` = `${camelize(
+                tattr,
+              )}AttrSelector`;
               if (
                 others_with_alt.length === 1 &&
                 others_with_alt[0] === htarget

@@ -511,15 +511,27 @@ export type mouseInteractionParam = {
   pointerType?: PointerTypes;
 };
 
-export type clickParam = mouseInteractionParam & {
-  href?: string;
-  targetText?: string;
-  targetSelector?: string;
-  targetW?: number;
-  targetH?: number;
-  relX?: number;
-  relY?: number;
-};
+type arbitraryTargetSelector = Partial<{
+  [key: `${string}AttrSelector`]: string;
+}>;
+
+export type clickParam = mouseInteractionParam &
+  arbitraryTargetSelector & {
+    href?: string;
+    targetText?: string;
+    targetSelector?: string;
+    targetW?: number;
+    targetH?: number;
+    relX?: number;
+    relY?: number;
+    targetTagName?: string;
+    targetClasses?: string[];
+    sigTargetTagName?: string;
+    altTargetSelector?: string;
+    byIdTargetSelector?: string;
+    structuralTargetSelector?: string;
+    noNumericTargetSelector?: string;
+  };
 
 export type mouseInteractionCallBack = (d: mouseInteractionParam) => void;
 
