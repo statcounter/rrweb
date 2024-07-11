@@ -165,7 +165,9 @@ export function getTopWindow(): Window {
     // check each parent in case the window.top.document fails, but an intermediary one would succeed
     try {
       let tdoc = twindow.parent.document; // this can fail apparently: https://stackoverflow.com/questions/2937118
-      twindow = twindow.parent as Window;
+      if (tdoc) {
+        twindow = twindow.parent as Window;
+      }
     } catch (err) {
       break;
     }

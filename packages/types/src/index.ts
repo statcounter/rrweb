@@ -58,6 +58,8 @@ export type metaEvent = {
     width: number;
     height: number;
     devicePixelRatio?: number;
+    pointerFine?: boolean;
+    initialOffset?: topLeftOffset;
   };
 };
 
@@ -509,6 +511,10 @@ export type mouseInteractionParam = {
   x?: number;
   y?: number;
   pointerType?: PointerTypes;
+  pageXDist?: number;
+  pageYDist?: number;
+  viewportXDist?: number;
+  viewportYDist?: number;
 };
 
 type arbitraryTargetSelector = Partial<{

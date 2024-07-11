@@ -68,6 +68,7 @@ export type recordOptions<T> = {
   sampling?: SamplingStrategy;
   dataURLOptions?: DataURLOptions;
   recordDOM?: boolean;
+  triangulateClicks?: boolean;
   recordCanvas?: boolean;
   recordCrossOriginIframes?: boolean;
   recordAfter?: 'DOMContentLoaded' | 'load';
@@ -112,6 +113,7 @@ export type observerParam = {
   fontCb: fontCallback;
   sampling: SamplingStrategy;
   recordDOM: boolean;
+  triangulateClicks: boolean;
   captureAssets: captureAssetsParam;
   recordCanvas: boolean;
   userTriggeredOnInput: boolean;

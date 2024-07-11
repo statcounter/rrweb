@@ -1029,7 +1029,7 @@ export function serializeNodeWithId(
     maskTextClass: string | RegExp;
     maskTextSelector: string | null;
     skipChild: boolean;
-    ignoreChildren: boolean;
+    ignoreChildren?: boolean;
     inlineStylesheet: boolean;
     newlyAddedElement?: boolean;
     maskInputOptions?: MaskInputOptions;

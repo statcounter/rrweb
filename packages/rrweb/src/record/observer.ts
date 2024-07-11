@@ -334,7 +334,7 @@ function initMouseInteractionObserver({
 
   const handlers: listenerHandler[] = [];
   let currentPointerType: PointerTypes | null = null;
-  let mouseDown = null;
+  let mouseDown: null | { [key: string]: number } = null;
   const getHandler = (eventKey: keyof typeof MouseInteractions) => {
     return (event: MouseEvent | TouchEvent | PointerEvent) => {
       let pointerType: PointerTypes | null = null;
@@ -448,7 +448,7 @@ function initMouseInteractionObserver({
         return;
       }
       const id = mirror.getId(target);
-      let htarget = target as Element;
+      let htarget = target as HTMLElement;
       let emissionEvent: mouseInteractionParam | clickParam = {
         type: MouseInteractions[thisEventKey],
         id,
@@ -465,6 +465,7 @@ function initMouseInteractionObserver({
         let hrefAttr: string | null = null;
         let src: string | null = null;
         let targetText: string | null = null;
+        let cEmissionEvent = emissionEvent as clickParam;
 
         let sig_target =
           htarget.closest &&
@@ -506,8 +507,8 @@ function initMouseInteractionObserver({
         } else if (sig_target.tagName.toLowerCase() === 'img') {
           src = (sig_target as HTMLAnchorElement).src;
         }
-        emissionEvent = {
-          ...emissionEvent,
+        cEmissionEvent = {
+          ...cEmissionEvent,
           ...(href && { href }),
           ...(hrefAttr && { hrefAttr }),
           ...(src && { src }),
@@ -515,15 +516,15 @@ function initMouseInteractionObserver({
           targetTagName: htarget.tagName,
         };
         if (htarget.classList && htarget.classList.length) {
-          emissionEvent = {
-            ...emissionEvent,
+          cEmissionEvent = {
+            ...cEmissionEvent,
             targetClasses: Array.from(htarget.classList),
           };
         }
 
         if (htarget !== sig_target) {
-          emissionEvent = {
-            ...emissionEvent,
+          cEmissionEvent = {
+            ...cEmissionEvent,
             sigTargetTagName: sig_target.tagName,
           };
         }
@@ -540,8 +541,8 @@ function initMouseInteractionObserver({
           if (htargetBound === null) {
             htargetBound = (htarget as Element).getBoundingClientRect();
           }
-          emissionEvent = {
-            ...emissionEvent,
+          cEmissionEvent = {
+            ...cEmissionEvent,
             targetSelector: targetSelector,
             targetW: Math.round(10 * htargetBound.width) / 10,
             targetH: Math.round(10 * htargetBound.height) / 10,
@@ -570,14 +571,17 @@ function initMouseInteractionObserver({
             });
             // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
-              emissionEvent = {
-                ...emissionEvent,
+              cEmissionEvent = {
+                ...cEmissionEvent,
                 altTargetSelector: altTargetSelector,
               };
             }
           } catch (e2) {}
           try {
-            const closest_with_id = target.parentNode.closest('[id]');
+            let closest_with_id: HTMLElement | null = null;
+            if (target.parentElement) {
+              closest_with_id = target.parentElement.closest('[id]');
+            }
             if (closest_with_id) {
               let byIdTargetSelector = finder(htarget, {
                 root: closest_with_id,
@@ -600,8 +604,8 @@ function initMouseInteractionObserver({
                   targetSelector !== byIdTargetSelector &&
                   byIdTargetSelector !== altTargetSelector
                 ) {
-                  emissionEvent = {
-                    ...emissionEvent,
+                  cEmissionEvent = {
+                    ...cEmissionEvent,
                     byIdTargetSelector: byIdTargetSelector,
                   };
                 }
@@ -620,8 +624,8 @@ function initMouseInteractionObserver({
                 targetSelector !== structuralTargetSelector &&
                 structuralTargetSelector !== altTargetSelector
               ) {
-                emissionEvent = {
-                  ...emissionEvent,
+                cEmissionEvent = {
+                  ...cEmissionEvent,
                   structuralTargetSelector: structuralTargetSelector,
                 };
               }
@@ -634,8 +638,8 @@ function initMouseInteractionObserver({
               className: (cn) => !cn.match(/[0-9]/),
             });
             if (targetSelector !== noNumericTargetSelector) {
-              emissionEvent = {
-                ...emissionEvent,
+              cEmissionEvent = {
+                ...cEmissionEvent,
                 noNumericTargetSelector: noNumericTargetSelector,
               };
             }
@@ -647,7 +651,7 @@ function initMouseInteractionObserver({
             );
           };
           ['alt', 'aria-label', 'title', 'placeholder'].forEach((tattr) => {
-            const alt_value = target.getAttribute(tattr);
+            const alt_value = htarget.getAttribute(tattr);
             if (alt_value && alt_value.length < 40) {
               const altAttributeSelector =
                 '[' + tattr + '="' + alt_value + '"]';
@@ -660,7 +664,7 @@ function initMouseInteractionObserver({
                 others_with_alt.length === 1 &&
                 others_with_alt[0] === htarget
               ) {
-                emissionEvent[attr_name] = altAttributeSelector;
+                cEmissionEvent[attr_name] = altAttributeSelector;
               }
             }
           });
