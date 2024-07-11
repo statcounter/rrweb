@@ -479,33 +479,32 @@ function initMouseInteractionObserver({
         if (!sig_target.tagName) {
           // could be the #document element
         } else if (sig_target.tagName.toLowerCase() === 'a') {
-          if ((sig_target as HTMLAnchorElement).href) {
-            href = (sig_target as HTMLAnchorElement).href; // this is worse for matching as resolves to a full absolute URL
-            hrefAttr = (sig_target as HTMLAnchorElement).getAttribute('href');
+          const a_target = sig_target as HTMLAnchorElement;
+          if (a_target.href) {
+            href = a_target.href; // this is worse for matching as resolves to a full absolute URL
+            hrefAttr = a_target.getAttribute('href');
           }
-          targetText = (sig_target as HTMLAnchorElement).innerText.substring(
-            0,
-            40,
-          );
+          targetText = a_target.innerText.substring(0, 40);
         } else if (
           sig_target.tagName.toLowerCase() === 'area' &&
           (sig_target as HTMLAreaElement).href
         ) {
-          href = (sig_target as HTMLAreaElement).href; // this is worse for matching as resolves to a full absolute URL
-          hrefAttr = (sig_target as HTMLAnchorElement).getAttribute('href');
+          const area_target = sig_target as HTMLAreaElement;
+          href = area_target.href; // this is worse for matching as resolves to a full absolute URL
+          hrefAttr = area_target.getAttribute('href');
         } else if (sig_target.tagName.toLowerCase() === 'button') {
-          targetText = (sig_target as HTMLButtonElement).innerText.substring(
-            0,
-            40,
-          );
+          const button_target = sig_target as HTMLButtonElement;
+          targetText = button_target.innerText.substring(0, 40);
         } else if (
           sig_target.tagName.toLowerCase() === 'input' &&
           ((sig_target as HTMLInputElement).type === 'submit' ||
             (sig_target as HTMLInputElement).type === 'button')
         ) {
-          targetText = (sig_target as HTMLInputElement).value.substring(0, 40);
+          const button_target = sig_target as HTMLInputElement;
+          targetText = button_target.value.substring(0, 40);
         } else if (sig_target.tagName.toLowerCase() === 'img') {
-          src = (sig_target as HTMLAnchorElement).src;
+          const image_target = sig_target as HTMLImageElement;
+          src = image_target.src;
         }
         cEmissionEvent = {
           ...cEmissionEvent,
@@ -569,6 +568,7 @@ function initMouseInteractionObserver({
                   firstRoundClasses.indexOf('.' + cn) < 0),
               tagName: noCommonTags,
             });
+
             // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
               cEmissionEvent = {
