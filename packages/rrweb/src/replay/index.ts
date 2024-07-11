@@ -106,6 +106,12 @@ const defaultMouseTailConfig = {
   strokeStyle: 'red',
 } as const;
 
+declare global {
+  interface Window {
+    wssend: Function | undefined;
+  }
+}
+
 function indicatesTouchDevice(e: eventWithTime) {
   return (
     e.type == EventType.IncrementalSnapshot &&
@@ -2256,7 +2262,9 @@ export class Replayer {
         : Object.assign({}, defaultMouseTailConfig, this.config.mouseTail);
 
     // either hsla or rgba
-    const stroke_alpha_match = strokeStyle.match(/[a-z]+a\([^)]+?,[^)]+?,[^)]+?,([^)]+)\)/)
+    const stroke_alpha_match = strokeStyle.match(
+      /[a-z]+a\([^)]+?,[^)]+?,[^)]+?,([^)]+)\)/,
+    );
 
     const draw = () => {
       if (!this.mouseTail) {
@@ -2274,7 +2282,10 @@ export class Replayer {
       ctx.moveTo(this.tailPositions[0].x, this.tailPositions[0].y);
       if (stroke_alpha_match) {
         this.tailPositions.forEach((p) => {
-          ctx.strokeStyle = strokeStyle.replace(',' + stroke_alpha_match[1] + ')', ', ' + p.fade + ')')
+          ctx.strokeStyle = strokeStyle.replace(
+            ',' + stroke_alpha_match[1] + ')',
+            ', ' + p.fade + ')',
+          );
           ctx.lineTo(p.x, p.y);
           ctx.stroke();
           ctx.beginPath();
@@ -2299,10 +2310,10 @@ export class Replayer {
       function fadeLine() {
         position.fade = position.fade / 2;
         if (position.fade > 0.05) {
-          setTimeout(fadeLine, duration/5);
+          setTimeout(fadeLine, duration / 5);
         }
       }
-      setTimeout(fadeLine, duration/5);
+      setTimeout(fadeLine, duration / 5);
     }
   }
 
@@ -2368,14 +2379,23 @@ export class Replayer {
     if (!this.config.showWarning) {
       return;
     }
-    if (typeof wssend === 'function') {
-      var title = document.querySelector('.stats-header h1 span');
-      wssend({
-        'type': 'warning',
-        'version': jQuery('.playback-version-info').html(),
-        'href': document.location.href,
-        'title': document.querySelectorAll('.session-playback-button').length ? (title ? title.innerText : '[unknown title]') : '[standalone recording]',
-        'message': args.join(' ')
+    if (typeof window.wssend === 'function') {
+      const title = document.querySelector(
+        '.stats-header h1 span',
+      ) as HTMLElement;
+      const vinfo = document.querySelector(
+        '.playback-version-info',
+      ) as HTMLElement;
+      window.wssend({
+        type: 'warning',
+        version: vinfo ? vinfo.innerHTML : '[.playback-version-info not found]',
+        href: document.location.href,
+        title: document.querySelectorAll('.session-playback-button').length
+          ? title
+            ? title.innerText
+            : '[unknown title]'
+          : '[standalone recording]',
+        message: args.join(' '),
       });
     }
     this.config.logger.warn(REPLAY_CONSOLE_PREFIX, ...args);
