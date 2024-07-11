@@ -1,3 +1,14 @@
 import { record } from 'rrweb';
 
-export { record };
+import {
+  EventType,
+  IncrementalSource,
+  MouseInteractions,
+} from '@rrweb/types';
+
+export { 
+  EventType,
+  IncrementalSource,
+  MouseInteractions,
+  record,
+};
