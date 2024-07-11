@@ -140,18 +140,17 @@ function getEventTarget(event: Event | NonStandardEvent): EventTarget | null {
 }
 
 // adapted from https://stackoverflow.com/a/49663134/6691
-const getStructuralPath = (el) => {
-  let path = [],
-    parent;
-  let unique_tags = {
+const getStructuralPath = (el: HTMLElement) => {
+  let path: string[] = [];
+  const unique_tags: { [key: string]: boolean } = {
     DIV: false,
     SPAN: false,
   };
-  while ((parent = el.parentNode)) {
-    let tag = el.tagName,
-      siblings;
+  let parent = el.parentElement;
+  while (parent) {
+    const tag = el.tagName;
+    const is_anon = tag === 'DIV' || tag === 'SPAN';
     let id_or_tag;
-    let is_anon = tag === 'DIV' || tag === 'SPAN';
     if (el.id && !el.id.match(/[0-9]/)) {
       if (!is_anon) {
         id_or_tag = `${tag.toLowerCase()}#${el.id}`;
@@ -159,18 +158,18 @@ const getStructuralPath = (el) => {
         id_or_tag = `#${el.id}`;
       }
     } else {
-      let siblings = parent.children;
-      let siblings_of_type = [].filter.call(
-        siblings,
-        (sibling) => sibling.tagName === tag,
-      );
+      const siblings_of_type = parent.querySelectorAll(tag);
       if (siblings_of_type.length === 1) {
         id_or_tag = tag;
-      } else if (is_anon && siblings.length === siblings_of_type.length) {
-        id_or_tag = `:nth-child(${1 + [].indexOf.call(siblings, el)})`;
+      } else if (
+        is_anon &&
+        parent.children.length === siblings_of_type.length
+      ) {
+        const siblings = Array.from(parent.children);
+        id_or_tag = `:nth-child(${1 + siblings.indexOf(el)})`;
       } else {
         id_or_tag = `${tag}:nth-of-type(${
-          1 + [].indexOf.call(siblings_of_type, el)
+          1 + Array.from(siblings_of_type).indexOf(el)
         })`;
       }
     }
@@ -194,6 +193,7 @@ const getStructuralPath = (el) => {
       break;
     }
     el = parent;
+    parent = el.parentElement;
   }
   return `${path.join(' > ')}`.toLowerCase();
 };

@@ -20,7 +20,7 @@ import {
 } from '../utils';
 import type { recordOptions } from '../types';
 import {
-  IWindow,
+  type IWindow,
   EventType,
   type eventWithoutTime,
   type eventWithTime,
