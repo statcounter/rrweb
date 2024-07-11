@@ -409,28 +409,34 @@ function initMouseInteractionObserver({
         // (this seems redundant now)
         target = event.target as Node;
         try {
-          let path = [];
+          let path: EventTarget[] = [];
           if ('composedPath' in event) {
             path = event.composedPath();
-          } else if ('path' in event && event.path.length) {
-            path = event.path;
+          } else if ('path' in event) {
+            const legacyEvent = event as NonStandardEvent;
+            if (legacyEvent.path.length) {
+              path = legacyEvent.path;
+            }
           }
-          if (path.length) {
-            for (let i = 0; i < path.length; i++) {
-              if (path[i].nodeType == 9) {
-                target = path[i] as Node;
-                break;
-              }
-              htargetBound = (path[i] as Element).getBoundingClientRect();
-              if (
-                htargetBound.left < clientX &&
-                clientX < htargetBound.right &&
-                htargetBound.top < clientY &&
-                clientY < htargetBound.bottom
-              ) {
-                target = path[i] as Node;
-                break;
-              }
+          for (const maybeNode of path) {
+            if (!('nodeType' in maybeNode)) {
+              // probably wrong type of event
+              continue;
+            }
+            const node = maybeNode as Node;
+            if (node.nodeType === Node.DOCUMENT_NODE) {
+              target = node;
+              break;
+            }
+            htargetBound = (node as HTMLElement).getBoundingClientRect();
+            if (
+              htargetBound.left < clientX &&
+              clientX < htargetBound.right &&
+              htargetBound.top < clientY &&
+              clientY < htargetBound.bottom
+            ) {
+              target = maybeNode as Node;
+              break;
             }
           }
         } catch {
