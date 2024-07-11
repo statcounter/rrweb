@@ -625,7 +625,7 @@ function initMouseInteractionObserver({
             const noNumericTargetSelector = finder(htarget, {
               root: doc.body,
               idName: (idn) => !idn.match(/[0-9]/),
-              className: (cn) => !idn.match(/[0-9]/),
+              className: (cn) => !cn.match(/[0-9]/),
             });
             if (targetSelector !== noNumericTargetSelector) {
               emissionEvent = {
