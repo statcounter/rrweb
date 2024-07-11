@@ -139,7 +139,7 @@ export class Replayer {
 
   private mouse: HTMLDivElement;
   private mouseTail: HTMLCanvasElement | null = null;
-  private tailPositions: Array<{ x: number; y: number }> = [];
+  private tailPositions: Array<{ x: number; y: number; fade?: number }> = [];
 
   private emitter: Emitter = mitt();
 
@@ -2297,24 +2297,26 @@ export class Replayer {
       ctx.stroke();
     };
     if (stroke_alpha_match) {
-      position.fade = parseFloat(stroke_alpha_match[1]);
+      const fPosition = {
+        ...position,
+        fade: parseFloat(stroke_alpha_match[1]),
+      };
+      this.tailPositions.push(fPosition);
+      function fadeLine() {
+        fPosition.fade = fPosition.fade / 2;
+        if (fPosition.fade > 0.05) {
+          setTimeout(fadeLine, duration / 5);
+        }
+      }
+      setTimeout(fadeLine, duration / 5);
+    } else {
+      this.tailPositions.push(position);
     }
-    this.tailPositions.push(position);
     draw();
     setTimeout(() => {
       this.tailPositions = this.tailPositions.filter((p) => p !== position);
       draw();
     }, duration / this.speedService.state.context.timer.speed);
-
-    if (stroke_alpha_match) {
-      function fadeLine() {
-        position.fade = position.fade / 2;
-        if (position.fade > 0.05) {
-          setTimeout(fadeLine, duration / 5);
-        }
-      }
-      setTimeout(fadeLine, duration / 5);
-    }
   }
 
   private hoverElements(el: Element) {
