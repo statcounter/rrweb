@@ -1,4 +1,4 @@
-import { record, utils } from 'rrweb';
+import { record, getWindowScroll, getWindowHeight, getWindowWidth } from 'rrweb';
 
 import {
   EventType,
@@ -6,9 +6,6 @@ import {
   MouseInteractions,
 } from '@rrweb/types';
 
-const getWindowScroll = utils.getWindowScroll;
-const getWindowHeight = utils.getWindowHeight;
-const getWindowWidth = utils.getWindowWidth;
 
 export { 
   EventType,

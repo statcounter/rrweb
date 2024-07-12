@@ -26,6 +26,10 @@ const { addCustomEvent } = record;
 const { freezePage } = record;
 const { takeFullSnapshot } = record;
 
+const getWindowScroll = utils.getWindowScroll;
+const getWindowHeight = utils.getWindowHeight;
+const getWindowWidth = utils.getWindowWidth;
+
 export {
   record,
   addCustomEvent,
@@ -38,4 +42,7 @@ export {
   canvasMutation,
   _mirror as mirror,
   utils,
+  getWindowScroll,
+  getWindowHeight,
+  getWindowWidth,
 };
