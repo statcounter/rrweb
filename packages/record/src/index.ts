@@ -1,4 +1,4 @@
-import { record } from 'rrweb';
+import { record, utils } from 'rrweb';
 
 import {
   EventType,
@@ -6,9 +6,16 @@ import {
   MouseInteractions,
 } from '@rrweb/types';
 
+const getWindowScroll = utils.getWindowScroll;
+const getWindowHeight = utils.getWindowHeight;
+const getWindowWidth = utils.getWindowWidth;
+
 export { 
   EventType,
   IncrementalSource,
   MouseInteractions,
   record,
+  getWindowScroll,
+  getWindowHeight,
+  getWindowWidth,
 };

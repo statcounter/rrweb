@@ -770,10 +770,6 @@ record.stop = (cleanup = true) => {
   stop(cleanup);
 };
 
-record.getWindowWidth = getWindowWidth;
-record.getWindowHeight = getWindowHeight;
-record.getWindowScroll = getWindowScroll;
-
 record.mirror = mirror;
 
 export default record;
