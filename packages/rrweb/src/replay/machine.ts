@@ -294,6 +294,9 @@ export function createPlayerService(
               const castFn = getCastFn(event, isSync);
               if (isSync) {
                 castFn();
+              } else if (event.type === EventType.Asset) {
+                // need to apply it asap to the existing FullSnapshot
+                castFn();
               } else if (timer.isActive()) {
                 timer.addAction({
                   doAction: () => {
