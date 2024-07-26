@@ -498,7 +498,7 @@ export default class MutationBuffer {
         // no need to include them on added elements, as they have just been serialized with up to date attribubtes
         .filter((text) => !addedIds.has(text.id))
         // text mutation's id was not in the mirror map means the target node has been removed
-        .filter((text) => this.mirror.has(text.id)),
+        .filter((text) => text.id !== IGNORED_NODE && this.mirror.has(text.id)),
       attributes: this.attributes
         .map((attribute) => {
           const { attributes } = attribute;
@@ -526,7 +526,10 @@ export default class MutationBuffer {
         // no need to include them on added elements, as they have just been serialized with up to date attribubtes
         .filter((attribute) => !addedIds.has(attribute.id))
         // attribute mutation's id was not in the mirror map means the target node has been removed
-        .filter((attribute) => this.mirror.has(attribute.id)),
+        .filter(
+          (attribute) =>
+            attribute.id !== IGNORED_NODE && this.mirror.has(attribute.id),
+        ),
       removes: this.removes,
       adds,
     };
