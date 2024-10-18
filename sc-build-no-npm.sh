@@ -12,7 +12,7 @@ cp -f /home/statcounter/rrweb/packages/replay/dist/replay.umd.cjs /home/statcoun
 cp -f /home/statcounter/rrweb/packages/replay/dist/replay.umd.min.cjs /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
 sed -e '/\(dropped\|ignored\).*\[/,/\]/!d' /home/statcounter/recorder/member-websocket.py | sed 's|EventType|rrweb.EventType|g' | sed 's|IncrementalSource|rrweb.IncrementalSource|g' | sed 's|__add__|concat|g' >> /home/statcounter/www/libs/rrweb/rrweb-replay.js
 sed -e '/\(dropped\|ignored\).*\[/,/\]/!d' /home/statcounter/recorder/member-websocket.py | sed 's|EventType|rrweb.EventType|g' | sed 's|IncrementalSource|rrweb.IncrementalSource|g' | sed 's|__add__|concat|g' >> /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
-sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
+sed -i "/^\/\/# sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
 
 if ! [[ -n $(diff /home/statcounter/rrweb/packages/record/dist/record.umd.cjs /home/statcounter/www/libs/rrweb/rrweb-record.js) ]]; then
   # don't take next actions if only replay stuff has changed
@@ -22,7 +22,7 @@ fi
 
 cp -f /home/statcounter/rrweb/packages/record/dist/record.umd.cjs /home/statcounter/www/libs/rrweb/rrweb-record.js
 cp -f /home/statcounter/rrweb/packages/record/dist/record.umd.min.cjs /home/statcounter/www/libs/rrweb/rrweb-record.min.js
-sed -i "/sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-record.min.js
+sed -i "/^\/\/# sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-record.min.js
 RRWEBV=`git rev-parse HEAD`
 mkdir -p /home/statcounter/www/libs/rrweb/versioned
 cp -f /home/statcounter/rrweb/packages/record/dist/record.umd.cjs "/home/statcounter/www/libs/rrweb/versioned/rrweb-record-$RRWEBV.js"
