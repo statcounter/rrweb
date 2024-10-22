@@ -241,7 +241,7 @@ function record<T = eventWithTime>(
   };
   wrappedEmit = (r: eventWithoutTime | eventWithTime, isCheckout?: boolean) => {
     const e = r as eventWithTime;
-    if (!('timestamp' in r)) {
+    if (!('timestamp' in r) || r['timestamp'] === undefined) {
       e.timestamp = nowTimestamp();
     }
     if (ongoingMove) {
@@ -317,7 +317,7 @@ function record<T = eventWithTime>(
         source: IncrementalSource.Mutation,
         ...m,
       },
-      timestamp,
+      timestamp, // !! could be set to undefined
     });
   };
   const wrappedScrollEmit: scrollCallback = (p) =>
