@@ -4,7 +4,6 @@ import type {
   elementNode,
   canvasMutationData,
   canvasEventWithTime,
-  elementNode,
   inputData,
   scrollData,
   styleDeclarationData,
