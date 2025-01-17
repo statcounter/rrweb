@@ -1907,7 +1907,25 @@ export class Replayer {
                   attributeName.substring('rr_captured_'.length),
                   value,
                 );
+              } else if (attributeName === 'rr_onErrorSrc') {
+                // pass
               } else {
+                if (targetEl.tagName === 'IMG' && attributeName === 'src' && mutation.attributes['rr_onErrorSrc']) {
+                  // set onerror before setting src
+                  const rr_onErrorSrc = mutation.attributes['rr_onErrorSrc'] as string;
+                  let rr_onErrorSrcset: string | false = false;
+                  if (mutation.attributes['rr_onErrorSrcset']) {
+                    rr_onErrorSrcset = mutation.attributes['rr_onErrorSrcset'];
+                  }
+                  const img = targetEl as HTMLImageElement;
+                  img.onerror = () => {
+                    img.onerror = null; // prevent infinite loop if `value` also fails
+                    img.src = rr_onErrorSrc;
+                    if (rr_onErrorSrcset !== false) {
+                      img.srcset = rr_onErrorSrcset;
+                    }
+                  };
+                }
                 targetEl.setAttribute(attributeName, value);
               }
 
