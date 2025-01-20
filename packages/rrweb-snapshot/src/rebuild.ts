@@ -97,6 +97,8 @@ export function createCache(): BuildCache {
   };
 }
 
+const errorSrcCache: Map<string, string> = new Map();
+
 /**
  * undo splitCssText/markCssSplits
  * (would move to utils.ts but uses `adaptCssForReplay`)
@@ -442,13 +444,26 @@ function buildNode(
           if (specialAttributes['rr_onErrorSrcset']) {
             rr_onErrorSrcset = specialAttributes['rr_onErrorSrcset'] as string;
           }
-          img.onerror = () => {
-            img.onerror = null; // prevent infinite loop if `value` also fails
-            img.src = value as string;
+          const cacheValue = errorSrcCache.get(img.src);
+          if (cacheValue) {
+            img.src = cacheValue;
             if (rr_onErrorSrcset !== false) {
-              img.srcset = rr_onErrorSrcset;
+              const srcsetCache = errorSrcCache.get(img.srcset);
+              if (srcsetCache) {
+                img.srcset = srcsetCache;
+              }
             }
-          };
+          } else {
+            img.onerror = () => {
+              img.onerror = null; // prevent infinite loop if `value` also fails
+              errorSrcCache.set(img.src, value as string);
+              img.src = value as string;
+              if (rr_onErrorSrcset !== false) {
+                errorSrcCache.set(img.srcset, rr_onErrorSrcset);
+                img.srcset = rr_onErrorSrcset;
+              }
+            };
+          }
         }
       }
 

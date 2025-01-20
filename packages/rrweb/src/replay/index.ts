@@ -112,6 +112,8 @@ declare global {
   }
 }
 
+const errorSrcCache: Map<string, string> = new Map();
+
 function indicatesTouchDevice(e: eventWithTime) {
   return (
     e.type == EventType.IncrementalSnapshot &&
@@ -1834,7 +1836,7 @@ export class Replayer {
       }
       const targetEl = target as HTMLElement | RRElement;
       for (const attributeName in mutation.attributes) {
-        const value = mutation.attributes[attributeName];
+        let value = mutation.attributes[attributeName];
         if (typeof attributeName === 'string') {
           if (value === null) {
             (target as Element | RRElement).removeAttribute(attributeName);
@@ -1907,7 +1909,7 @@ export class Replayer {
                   attributeName.substring('rr_captured_'.length),
                   value,
                 );
-              } else if (attributeName === 'rr_onErrorSrc') {
+              } else if (attributeName === 'rr_onErrorSrc' || attributeName === 'rr_onErrorSrcset') {
                 // pass
               } else {
                 if (targetEl.tagName === 'IMG' && attributeName === 'src' && mutation.attributes['rr_onErrorSrc']) {
@@ -1915,16 +1917,30 @@ export class Replayer {
                   const rr_onErrorSrc = mutation.attributes['rr_onErrorSrc'] as string;
                   let rr_onErrorSrcset: string | false = false;
                   if (mutation.attributes['rr_onErrorSrcset']) {
-                    rr_onErrorSrcset = mutation.attributes['rr_onErrorSrcset'];
+                    rr_onErrorSrcset = mutation.attributes['rr_onErrorSrcset'] as string;
                   }
                   const img = targetEl as HTMLImageElement;
-                  img.onerror = () => {
-                    img.onerror = null; // prevent infinite loop if `value` also fails
-                    img.src = rr_onErrorSrc;
-                    if (rr_onErrorSrcset !== false) {
-                      img.srcset = rr_onErrorSrcset;
+                  const cacheValue = errorSrcCache.get(value);
+                  if (cacheValue) {
+                    value = cacheValue;
+                    if (mutation.attributes['srcset']) {
+                      const srcsetCache = errorSrcCache.get(mutation.attributes['srcset'] as string);
+                      if (srcsetCache) {
+                        img.srcset = srcsetCache;
+                      }
                     }
-                  };
+                  } else {
+                    img.onerror = () => {
+                      img.onerror = null; // prevent infinite loop if `value` also fails
+                      errorSrcCache.set(img.src, rr_onErrorSrc);
+                      img.src = rr_onErrorSrc;
+
+                      if (rr_onErrorSrcset !== false) {
+                        errorSrcCache.set(img.srcset, rr_onErrorSrcset);
+                        img.srcset = rr_onErrorSrcset;
+                      }
+                    };
+                  }
                 }
                 targetEl.setAttribute(attributeName, value);
               }
