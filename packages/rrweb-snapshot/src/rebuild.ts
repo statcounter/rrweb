@@ -438,11 +438,15 @@ function buildNode(
         }
         if (tagName === 'img' && name === 'rr_onErrorSrc') {
           const img = node as HTMLImageElement;
+          let rr_onErrorSrcset: string | false = false;
+          if (specialAttributes['rr_onErrorSrcset']) {
+            rr_onErrorSrcset = specialAttributes['rr_onErrorSrcset'] as string;
+          }
           img.onerror = () => {
             img.onerror = null; // prevent infinite loop if `value` also fails
             img.src = value as string;
-            if (specialAttributes['rr_onErrorSrcset']) {
-              img.srcset = specialAttributes['rr_onErrorSrcset'] as string;
+            if (rr_onErrorSrcset !== false) {
+              img.srcset = rr_onErrorSrcset;
             }
           };
         }
