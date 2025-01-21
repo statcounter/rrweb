@@ -1,18 +1,9 @@
+./sc-build-replay.sh
+
 cd packages/record
 yarn build
-dos2unix -q dist/record/* dist/replay/*
+dos2unix -q dist/record/*
 cd - &> /dev/null
-
-cd packages/replay
-yarn build
-dos2unix -q dist/record/* dist/replay/*
-cd - &> /dev/null
-
-cp -f /home/statcounter/rrweb/packages/replay/dist/replay.umd.cjs /home/statcounter/www/libs/rrweb/rrweb-replay.js
-cp -f /home/statcounter/rrweb/packages/replay/dist/replay.umd.min.cjs /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
-sed -e '/\(dropped\|ignored\).*\[/,/\]/!d' /home/statcounter/recorder/member-websocket.py | sed 's|EventType|rrweb.EventType|g' | sed 's|IncrementalSource|rrweb.IncrementalSource|g' | sed 's|__add__|concat|g' >> /home/statcounter/www/libs/rrweb/rrweb-replay.js
-sed -e '/\(dropped\|ignored\).*\[/,/\]/!d' /home/statcounter/recorder/member-websocket.py | sed 's|EventType|rrweb.EventType|g' | sed 's|IncrementalSource|rrweb.IncrementalSource|g' | sed 's|__add__|concat|g' >> /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
-sed -i "/^\/\/# sourceMappingURL/d" --  /home/statcounter/www/libs/rrweb/rrweb-replay.min.js
 
 if ! [[ -n $(diff /home/statcounter/rrweb/packages/record/dist/record.umd.cjs /home/statcounter/www/libs/rrweb/rrweb-record.js) ]]; then
   # don't take next actions if only replay stuff has changed
