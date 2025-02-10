@@ -3959,51 +3959,11 @@ exports[`record integration tests > can record node mutations 1`] = `
         },
         {
           \\"parentId\\": 26,
-          \\"nextId\\": null,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"span\\",
-            \\"attributes\\": {
-              \\"class\\": \\"select2-arrow\\",
-              \\"role\\": \\"presentation\\"
-            },
-            \\"childNodes\\": [],
-            \\"id\\": 32
-          }
-        },
-        {
-          \\"parentId\\": 32,
-          \\"nextId\\": null,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"b\\",
-            \\"attributes\\": {
-              \\"role\\": \\"presentation\\"
-            },
-            \\"childNodes\\": [],
-            \\"id\\": 33
-          }
-        },
-        {
-          \\"parentId\\": 26,
-          \\"nextId\\": 32,
+          \\"nextId\\": 28,
           \\"node\\": {
             \\"type\\": 3,
             \\"textContent\\": \\"   \\",
-            \\"id\\": 31
-          }
-        },
-        {
-          \\"parentId\\": 26,
-          \\"nextId\\": 31,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"abbr\\",
-            \\"attributes\\": {
-              \\"class\\": \\"select2-search-choice-close\\"
-            },
-            \\"childNodes\\": [],
-            \\"id\\": 30
+            \\"id\\": 27
           }
         },
         {
@@ -4031,11 +3991,51 @@ exports[`record integration tests > can record node mutations 1`] = `
         },
         {
           \\"parentId\\": 26,
-          \\"nextId\\": 28,
+          \\"nextId\\": 31,
+          \\"node\\": {
+            \\"type\\": 2,
+            \\"tagName\\": \\"abbr\\",
+            \\"attributes\\": {
+              \\"class\\": \\"select2-search-choice-close\\"
+            },
+            \\"childNodes\\": [],
+            \\"id\\": 30
+          }
+        },
+        {
+          \\"parentId\\": 26,
+          \\"nextId\\": 32,
           \\"node\\": {
             \\"type\\": 3,
             \\"textContent\\": \\"   \\",
-            \\"id\\": 27
+            \\"id\\": 31
+          }
+        },
+        {
+          \\"parentId\\": 26,
+          \\"nextId\\": null,
+          \\"node\\": {
+            \\"type\\": 2,
+            \\"tagName\\": \\"span\\",
+            \\"attributes\\": {
+              \\"class\\": \\"select2-arrow\\",
+              \\"role\\": \\"presentation\\"
+            },
+            \\"childNodes\\": [],
+            \\"id\\": 32
+          }
+        },
+        {
+          \\"parentId\\": 32,
+          \\"nextId\\": null,
+          \\"node\\": {
+            \\"type\\": 2,
+            \\"tagName\\": \\"b\\",
+            \\"attributes\\": {
+              \\"role\\": \\"presentation\\"
+            },
+            \\"childNodes\\": [],
+            \\"id\\": 33
           }
         },
         {
@@ -4055,26 +4055,11 @@ exports[`record integration tests > can record node mutations 1`] = `
         },
         {
           \\"parentId\\": 36,
-          \\"nextId\\": null,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"ul\\",
-            \\"attributes\\": {
-              \\"class\\": \\"select2-results\\",
-              \\"role\\": \\"listbox\\",
-              \\"id\\": \\"select2-results-1\\"
-            },
-            \\"childNodes\\": [],
-            \\"id\\": 45
-          }
-        },
-        {
-          \\"parentId\\": 36,
-          \\"nextId\\": 45,
+          \\"nextId\\": 38,
           \\"node\\": {
             \\"type\\": 3,
             \\"textContent\\": \\"   \\",
-            \\"id\\": 44
+            \\"id\\": 37
           }
         },
         {
@@ -4092,11 +4077,34 @@ exports[`record integration tests > can record node mutations 1`] = `
         },
         {
           \\"parentId\\": 38,
-          \\"nextId\\": null,
+          \\"nextId\\": 40,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"   \\",
-            \\"id\\": 43
+            \\"textContent\\": \\"       \\",
+            \\"id\\": 39
+          }
+        },
+        {
+          \\"parentId\\": 38,
+          \\"nextId\\": 41,
+          \\"node\\": {
+            \\"type\\": 2,
+            \\"tagName\\": \\"label\\",
+            \\"attributes\\": {
+              \\"for\\": \\"s2id_autogen1_search\\",
+              \\"class\\": \\"select2-offscreen\\"
+            },
+            \\"childNodes\\": [],
+            \\"id\\": 40
+          }
+        },
+        {
+          \\"parentId\\": 38,
+          \\"nextId\\": 42,
+          \\"node\\": {
+            \\"type\\": 3,
+            \\"textContent\\": \\"       \\",
+            \\"id\\": 41
           }
         },
         {
@@ -4126,43 +4134,35 @@ exports[`record integration tests > can record node mutations 1`] = `
         },
         {
           \\"parentId\\": 38,
-          \\"nextId\\": 42,
+          \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"       \\",
-            \\"id\\": 41
-          }
-        },
-        {
-          \\"parentId\\": 38,
-          \\"nextId\\": 41,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"label\\",
-            \\"attributes\\": {
-              \\"for\\": \\"s2id_autogen1_search\\",
-              \\"class\\": \\"select2-offscreen\\"
-            },
-            \\"childNodes\\": [],
-            \\"id\\": 40
-          }
-        },
-        {
-          \\"parentId\\": 38,
-          \\"nextId\\": 40,
-          \\"node\\": {
-            \\"type\\": 3,
-            \\"textContent\\": \\"       \\",
-            \\"id\\": 39
+            \\"textContent\\": \\"   \\",
+            \\"id\\": 43
           }
         },
         {
           \\"parentId\\": 36,
-          \\"nextId\\": 38,
+          \\"nextId\\": 45,
           \\"node\\": {
             \\"type\\": 3,
             \\"textContent\\": \\"   \\",
-            \\"id\\": 37
+            \\"id\\": 44
+          }
+        },
+        {
+          \\"parentId\\": 36,
+          \\"nextId\\": null,
+          \\"node\\": {
+            \\"type\\": 2,
+            \\"tagName\\": \\"ul\\",
+            \\"attributes\\": {
+              \\"class\\": \\"select2-results\\",
+              \\"role\\": \\"listbox\\",
+              \\"id\\": \\"select2-results-1\\"
+            },
+            \\"childNodes\\": [],
+            \\"id\\": 45
           }
         },
         {
@@ -4204,16 +4204,27 @@ exports[`record integration tests > can record node mutations 1`] = `
           }
         },
         {
-          \\"parentId\\": 68,
-          \\"nextId\\": 69,
+          \\"parentId\\": 18,
+          \\"nextId\\": 36,
           \\"node\\": {
             \\"type\\": 2,
-            \\"tagName\\": \\"span\\",
+            \\"tagName\\": \\"div\\",
             \\"attributes\\": {
-              \\"class\\": \\"select2-match\\"
+              \\"id\\": \\"select2-drop-mask\\",
+              \\"class\\": \\"select2-drop-mask\\",
+              \\"style\\": \\"\\"
             },
             \\"childNodes\\": [],
             \\"id\\": 70
+          }
+        },
+        {
+          \\"parentId\\": 62,
+          \\"nextId\\": null,
+          \\"node\\": {
+            \\"type\\": 3,
+            \\"textContent\\": \\"2 results are available, use up and down arrow keys to navigate.\\",
+            \\"id\\": 71
           }
         },
         {
@@ -4227,11 +4238,11 @@ exports[`record integration tests > can record node mutations 1`] = `
               \\"role\\": \\"presentation\\"
             },
             \\"childNodes\\": [],
-            \\"id\\": 71
+            \\"id\\": 72
           }
         },
         {
-          \\"parentId\\": 71,
+          \\"parentId\\": 72,
           \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 2,
@@ -4242,21 +4253,21 @@ exports[`record integration tests > can record node mutations 1`] = `
               \\"role\\": \\"option\\"
             },
             \\"childNodes\\": [],
-            \\"id\\": 72
-          }
-        },
-        {
-          \\"parentId\\": 72,
-          \\"nextId\\": null,
-          \\"node\\": {
-            \\"type\\": 3,
-            \\"textContent\\": \\"A\\",
             \\"id\\": 73
           }
         },
         {
-          \\"parentId\\": 72,
-          \\"nextId\\": 73,
+          \\"parentId\\": 73,
+          \\"nextId\\": null,
+          \\"node\\": {
+            \\"type\\": 3,
+            \\"textContent\\": \\"A\\",
+            \\"id\\": 74
+          }
+        },
+        {
+          \\"parentId\\": 73,
+          \\"nextId\\": 74,
           \\"node\\": {
             \\"type\\": 2,
             \\"tagName\\": \\"span\\",
@@ -4264,30 +4275,19 @@ exports[`record integration tests > can record node mutations 1`] = `
               \\"class\\": \\"select2-match\\"
             },
             \\"childNodes\\": [],
-            \\"id\\": 74
-          }
-        },
-        {
-          \\"parentId\\": 18,
-          \\"nextId\\": 36,
-          \\"node\\": {
-            \\"type\\": 2,
-            \\"tagName\\": \\"div\\",
-            \\"attributes\\": {
-              \\"id\\": \\"select2-drop-mask\\",
-              \\"class\\": \\"select2-drop-mask\\",
-              \\"style\\": \\"\\"
-            },
-            \\"childNodes\\": [],
             \\"id\\": 75
           }
         },
         {
-          \\"parentId\\": 62,
-          \\"nextId\\": null,
+          \\"parentId\\": 68,
+          \\"nextId\\": 69,
           \\"node\\": {
-            \\"type\\": 3,
-            \\"textContent\\": \\"2 results are available, use up and down arrow keys to navigate.\\",
+            \\"type\\": 2,
+            \\"tagName\\": \\"span\\",
+            \\"attributes\\": {
+              \\"class\\": \\"select2-match\\"
+            },
+            \\"childNodes\\": [],
             \\"id\\": 76
           }
         }
@@ -4317,7 +4317,7 @@ exports[`record integration tests > can record node mutations 1`] = `
     \\"data\\": {
       \\"source\\": 2,
       \\"type\\": 0,
-      \\"id\\": 75
+      \\"id\\": 70
     }
   },
   {
@@ -10091,15 +10091,6 @@ exports[`record integration tests > should not record input values if dynamicall
   {
     \\"type\\": 3,
     \\"data\\": {
-      \\"source\\": 3,
-      \\"id\\": 21,
-      \\"x\\": 2,
-      \\"y\\": 0
-    }
-  },
-  {
-    \\"type\\": 3,
-    \\"data\\": {
       \\"source\\": 2,
       \\"type\\": 5,
       \\"id\\": 22
@@ -11302,11 +11293,11 @@ exports[`record integration tests > should record DOM node movement 1 1`] = `
         },
         {
           \\"parentId\\": 12,
-          \\"nextId\\": null,
+          \\"nextId\\": 14,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n    \\",
-            \\"id\\": 19
+            \\"textContent\\": \\"\\\\n      \\",
+            \\"id\\": 13
           }
         },
         {
@@ -11322,11 +11313,11 @@ exports[`record integration tests > should record DOM node movement 1 1`] = `
         },
         {
           \\"parentId\\": 14,
-          \\"nextId\\": null,
+          \\"nextId\\": 16,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n      \\",
-            \\"id\\": 18
+            \\"textContent\\": \\"\\\\n        \\",
+            \\"id\\": 15
           }
         },
         {
@@ -11351,20 +11342,20 @@ exports[`record integration tests > should record DOM node movement 1 1`] = `
         },
         {
           \\"parentId\\": 14,
-          \\"nextId\\": 16,
+          \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n        \\",
-            \\"id\\": 15
+            \\"textContent\\": \\"\\\\n      \\",
+            \\"id\\": 18
           }
         },
         {
           \\"parentId\\": 12,
-          \\"nextId\\": 14,
+          \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n      \\",
-            \\"id\\": 13
+            \\"textContent\\": \\"\\\\n    \\",
+            \\"id\\": 19
           }
         }
       ]
@@ -11558,11 +11549,11 @@ exports[`record integration tests > should record DOM node movement 2 1`] = `
       \\"adds\\": [
         {
           \\"parentId\\": 12,
-          \\"nextId\\": null,
+          \\"nextId\\": 14,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n    \\",
-            \\"id\\": 19
+            \\"textContent\\": \\"\\\\n      \\",
+            \\"id\\": 13
           }
         },
         {
@@ -11578,11 +11569,11 @@ exports[`record integration tests > should record DOM node movement 2 1`] = `
         },
         {
           \\"parentId\\": 14,
-          \\"nextId\\": null,
+          \\"nextId\\": 16,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n      \\",
-            \\"id\\": 18
+            \\"textContent\\": \\"\\\\n        \\",
+            \\"id\\": 15
           }
         },
         {
@@ -11607,20 +11598,20 @@ exports[`record integration tests > should record DOM node movement 2 1`] = `
         },
         {
           \\"parentId\\": 14,
-          \\"nextId\\": 16,
+          \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n        \\",
-            \\"id\\": 15
+            \\"textContent\\": \\"\\\\n      \\",
+            \\"id\\": 18
           }
         },
         {
           \\"parentId\\": 12,
-          \\"nextId\\": 14,
+          \\"nextId\\": null,
           \\"node\\": {
             \\"type\\": 3,
-            \\"textContent\\": \\"\\\\n      \\",
-            \\"id\\": 13
+            \\"textContent\\": \\"\\\\n    \\",
+            \\"id\\": 19
           }
         },
         {
