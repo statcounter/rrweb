@@ -302,22 +302,23 @@ export default class MutationBuffer {
       if (!parent || !inDom(n)) {
         return;
       }
+
+      const parentId = isShadowRoot(parent)
+        ? this.mirror.getId(getShadowHost(n))
+        : this.mirror.getId(parent);
+
       let cssCaptured = false;
       if (n.nodeType === Node.TEXT_NODE) {
         const parentTag = (parent as Element).tagName;
         if (parentTag === 'TEXTAREA') {
           // genTextAreaValueMutation already called via parent
           return;
-        } else if (parentTag === 'STYLE' && this.addedSet.has(parent)) {
+        } else if (parentTag === 'STYLE' && (this.addedSet.has(parent) || addedIds.has(parentId))) {
           // css content will be recorded via parent's _cssText attribute when
           // mutation adds entire <style> element
           cssCaptured = true;
         }
       }
-
-      const parentId = isShadowRoot(parent)
-        ? this.mirror.getId(getShadowHost(n))
-        : this.mirror.getId(parent);
 
       if (parentId === IGNORED_NODE) {
         return;
@@ -398,7 +399,23 @@ export default class MutationBuffer {
       pushAdd(n);
     }
 
-    for (const n of this.addedSet) {
+    let n = null;
+    while (this.addedSet.size) {
+      if (n === null || !this.addedSet.has(n.previousSibling)) {
+        n =  this.addedSet.values().next().value;  // pop
+        while (this.addedSet.has(n.parentNode)) {
+          // start as high up as we can
+          n = n.parentNode;
+        }
+        while (this.addedSet.has(n.nextSibling)) {
+          // keep going until we find one that can be pushed now
+          n = n.nextSibling;
+        }
+      } else {
+        // n will have a good nextSibling
+        n = n.previousSibling;
+      }
+      this.addedSet.delete(n);
       if (
         !isAncestorInSet(this.droppedSet, n) &&
         !isParentRemoved(this.removesSubTreeCache, n, this.mirror)
