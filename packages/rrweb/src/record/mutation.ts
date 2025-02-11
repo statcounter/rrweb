@@ -341,7 +341,10 @@ export default class MutationBuffer {
           }
           if (hasShadowRoot(n as Node)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.shadowDomManager.addShadowRoot(dom.shadowRoot(n as Node)!, this.doc);
+            this.shadowDomManager.addShadowRoot(
+              dom.shadowRoot(n as Node)!,
+              this.doc,
+            );
           }
         },
         onIframeLoad: (iframe, childSn) => {
