@@ -213,6 +213,7 @@ export default class MutationBuffer {
       } else {
         n = this.addedSet.values().next().value as Node; // pop
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           parentNode = dom.parentNode(n);
           if (this.addedSet.has(parentNode as Node)) {
@@ -250,6 +251,7 @@ export default class MutationBuffer {
             n = parentNode.lastChild as Node;
             nextSibling = null;
           } else {
+            // eslint-disable-next-line no-constant-condition
             while (true) {
               nextSibling = n.nextSibling;
               if (this.addedSet.has(nextSibling as Node)) {
