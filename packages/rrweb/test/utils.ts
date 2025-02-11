@@ -61,7 +61,7 @@ export const startServer = (defaultPort: number = 3031) =>
 
       let pathname = path.join(__dirname, sanitizePath);
       if (/^\/rrweb.*\.c?js.*/.test(sanitizePath)) {
-        pathname = path.join(__dirname, `../dist/main`, sanitizePath);
+        pathname = path.join(__dirname, `../dist`, sanitizePath);
       }
 
       try {
