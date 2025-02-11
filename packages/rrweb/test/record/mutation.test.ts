@@ -29,11 +29,7 @@ import {
   startServer,
   waitForRAF,
 } from '../utils';
-import {
-  EventType,
-  eventWithTime,
-  listenerHandler,
-} from '@rrweb/types';
+import { EventType, eventWithTime, listenerHandler } from '@rrweb/types';
 import { recordOptions } from '../../src/types';
 
 interface IWindow extends Window {
@@ -45,7 +41,6 @@ interface IWindow extends Window {
   };
   emit: (e: eventWithTime) => undefined;
 }
-
 
 describe('mutation', () => {
   vi.setConfig({ testTimeout: 100_000 });
@@ -123,7 +118,7 @@ describe('mutation', () => {
       d3.id = 'd3';
       const s3 = document.createElement('span');
       d3.append(s3);
-      
+
       d1.append(d2);
       d1.append(d3);
       document.body.append(d1);
@@ -131,7 +126,6 @@ describe('mutation', () => {
     await waitForRAF(page);
     await assertSnapshot(events);
   });
-
 
   it('add root first', async () => {
     await page.evaluate(() => {
@@ -153,7 +147,7 @@ describe('mutation', () => {
       d1.append(d3);
     });
     await waitForRAF(page);
-    await assertSnapshot(events);  // TODO: verify it's the same set of adds as 'add elements at once'
+    await assertSnapshot(events); // TODO: verify it's the same set of adds as 'add elements at once'
   });
 
   it('ignored starting comment', async () => {
@@ -167,7 +161,7 @@ describe('mutation', () => {
     });
     await waitForRAF(page);
     await assertSnapshot(events);
-  });  
+  });
 
   it('ignored middle comment', async () => {
     await page.evaluate(() => {
@@ -183,7 +177,7 @@ describe('mutation', () => {
     await waitForRAF(page);
     await assertSnapshot(events);
   });
-  
+
   it('ignored ending comment', async () => {
     await page.evaluate(() => {
       const d1 = document.createElement('div');
@@ -195,8 +189,5 @@ describe('mutation', () => {
     });
     await waitForRAF(page);
     await assertSnapshot(events);
-  });  
-
-  
+  });
 });
-
