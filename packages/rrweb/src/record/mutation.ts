@@ -306,10 +306,10 @@ export default class MutationBuffer {
     let n = null;
     while (this.addedSet.size) {
       if (n === null || !this.addedSet.has(n.previousSibling)) {
-        n =  this.addedSet.values().next().value;  // pop
-        while (this.addedSet.has(n.parentNode)) {
+        n = this.addedSet.values().next().value; // pop
+        while (this.addedSet.has(dom.parentNode(n))) {
           // start as high up as we can
-          n = n.parentNode;
+          n = dom.parentNode(n);
         }
         while (this.addedSet.has(n.nextSibling)) {
           // keep going until we find one that can be pushed now
