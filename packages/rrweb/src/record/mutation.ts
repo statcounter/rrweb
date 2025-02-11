@@ -229,15 +229,15 @@ export default class MutationBuffer {
           // we have a new parentNode for a 'row' of DOM children
           // perf: we reuse these calculations across all child nodes
 
-          ancestorBad = (isSelfOrAncestorInSet(this.droppedSet, parentNode)
-                         || this.removesSubTreeCache.has(parentNode));
-          if (ancestorBad && isSelfOrAncestorInSet(this.movedSet, n)) {
-            // not bad, just moved
-            ancestorBad = false;
-          }
           if (!inDom(parentNode)) {
-            // this check should overrule moved also
             ancestorBad = true;
+          } else {
+            ancestorBad = (isSelfOrAncestorInSet(this.droppedSet, parentNode)
+                           || this.removesSubTreeCache.has(parentNode));
+            if (ancestorBad && isSelfOrAncestorInSet(this.movedSet, n)) {
+              // not bad, just moved
+              ancestorBad = false;
+            }
           }
 
           if (parentId === IGNORED_NODE) {
