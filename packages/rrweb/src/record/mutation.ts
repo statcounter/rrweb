@@ -211,7 +211,7 @@ export default class MutationBuffer {
         nextSibling = n; // n is a good next sibling
         n = n.previousSibling as Node;
       } else {
-        n = this.addedSet.values().next().value as Node;  // pop
+        n = this.addedSet.values().next().value as Node; // pop
 
         while (true) {
           parentNode = dom.parentNode(n);
