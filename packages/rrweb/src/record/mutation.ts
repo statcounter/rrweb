@@ -235,8 +235,8 @@ export default class MutationBuffer {
             // not bad, just moved
             ancestorBad = false;
           }
-
           if (!inDom(parentNode)) {
+            // this check should overrule moved also
             ancestorBad = true;
           }
 
@@ -246,9 +246,8 @@ export default class MutationBuffer {
           
           if (this.addedSet.has(parentNode.lastChild as Node)) {
             // jump instead of crawling nextSibling to nextSibling
-            nextSibling = null;
             n = parentNode.lastChild as Node;
-            nextSibling = n.nextSibling;
+            nextSibling = null;
           } else {
             while (true) {
               nextSibling = n.nextSibling;
