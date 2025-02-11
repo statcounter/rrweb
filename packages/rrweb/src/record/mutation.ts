@@ -199,10 +199,10 @@ export default class MutationBuffer {
       this.addedSet.add(n);
     }
 
-    let n = null;
-    let parentId = null;
-    let parentNode = null;
-    let nextSibling = null;
+    let n: Node | null = null;
+    let parentNode: Node | null = null;
+    let parentId: number | null = null;
+    let nextSibling: Node | null = null;
     let ancestorBad = false;
     const missingParents = new Set<Node>();
     while (this.addedSet.size) {
@@ -231,7 +231,7 @@ export default class MutationBuffer {
 
           ancestorBad = (isSelfOrAncestorInSet(this.droppedSet, parentNode)
                          || this.removesSubTreeCache.has(parentNode));
-          if (ancestorBad && isAncestorInSet(this.movedSet, n)) {
+          if (ancestorBad && isSelfOrAncestorInSet(this.movedSet, n)) {
             // not bad, just moved
             ancestorBad = false;
           }
