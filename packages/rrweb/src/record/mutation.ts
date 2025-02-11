@@ -232,8 +232,9 @@ export default class MutationBuffer {
           if (!inDom(parentNode)) {
             ancestorBad = true;
           } else {
-            ancestorBad = (isSelfOrAncestorInSet(this.droppedSet, parentNode)
-                           || this.removesSubTreeCache.has(parentNode));
+            ancestorBad =
+              isSelfOrAncestorInSet(this.droppedSet, parentNode) ||
+              this.removesSubTreeCache.has(parentNode);
             if (ancestorBad && isSelfOrAncestorInSet(this.movedSet, n)) {
               // not bad, just moved
               ancestorBad = false;
@@ -265,7 +266,10 @@ export default class MutationBuffer {
             : this.mirror.getId(parentNode);
 
           // If the node is the direct child of a shadow root, we treat the shadow host as its parent node.
-          if (parentId === -1 && parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+          if (
+            parentId === -1 &&
+            parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE
+          ) {
             const shadowHost = dom.host(parentNode as ShadowRoot);
             parentId = this.mirror.getId(shadowHost);
           }
