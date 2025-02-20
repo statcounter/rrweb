@@ -109,16 +109,19 @@ function record<T = eventWithTime>(
     userTriggeredOnInput = false,
     collectFonts = false,
     inlineImages = false,
-    captureAssets = {
-      objectURLs: true,
-      origins: false,
-    },
+    captureAssets = {},
     plugins,
     keepIframeSrcFn = () => false,
     ignoreCSSAttributes = new Set([]),
     errorHandler,
   } = options;
 
+  if (captureAssets.objectURLs === undefined) {
+    captureAssets.objectURLs = true;
+  }
+  if (captureAssets.origins === undefined) {
+    captureAssets.origins = false;
+  }
   if (inlineImages && captureAssets.images === undefined) {
     captureAssets.images = inlineImages;
   }
