@@ -455,7 +455,7 @@ describe('onAssetDetected callback', () => {
     </video></div>`);
 
     const onAssetDetectedCallback = vi.fn();
-    const captureAssets = {}; // defaults
+    const captureAssets = undefined; // defaults
     const inlineImagesUndefined = undefined;
     serializeNode(
       el,
