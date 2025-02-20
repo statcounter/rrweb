@@ -108,7 +108,6 @@ function record<T = eventWithTime>(
       : 'load',
     userTriggeredOnInput = false,
     collectFonts = false,
-    inlineImages = false,
     captureAssets = {},
     plugins,
     keepIframeSrcFn = () => false,
@@ -122,8 +121,12 @@ function record<T = eventWithTime>(
   if (captureAssets.origins === undefined) {
     captureAssets.origins = false;
   }
-  if (inlineImages && captureAssets.images === undefined) {
-    captureAssets.images = inlineImages;
+  let inlineImages = false;
+  if (options.inlineImages !== undefined) {
+    inlineImages = options.inlineImages;
+    if (captureAssets.images === undefined) {
+      captureAssets.images = inlineImages;
+    }
   }
   if (captureAssets.stylesheets === undefined) {
     if (inlineStylesheet === 'all') {
