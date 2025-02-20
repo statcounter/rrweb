@@ -119,7 +119,7 @@ function record<T = eventWithTime>(
     errorHandler,
   } = options;
 
-  if (inlineImages) {
+  if (inlineImages && captureAssets.images === undefined) {
     captureAssets.images = inlineImages;
   }
   if (captureAssets.stylesheets === undefined) {
