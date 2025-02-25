@@ -22,6 +22,7 @@ export type loadedEvent = {
 export type assetStatus = {
   url: string;
   status: 'capturing' | 'captured' | 'error' | 'refused';
+  info?: string;
   timeout?: number;
 };
 

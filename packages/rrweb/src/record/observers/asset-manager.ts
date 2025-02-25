@@ -153,6 +153,7 @@ export default class AssetManager {
         return {
           url,
           status: 'captured',
+          info: 'already captured',
         };
       } else if (this.capturingURLs.has(url)) {
         return {
@@ -242,6 +243,7 @@ export default class AssetManager {
       return {
         url,
         status: 'captured',
+        info: 'just processed',
       };
     }
   }
@@ -269,6 +271,7 @@ export default class AssetManager {
       return {
         url,
         status: 'captured',
+        info: 'already url captured',
       };
     } else if (this.capturingURLs.has(url)) {
       return {
