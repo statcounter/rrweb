@@ -241,10 +241,6 @@ export default class MutationBuffer {
               ancestorBad = false;
             }
           }
-
-          if (parentId === IGNORED_NODE) {
-            ancestorBad = true;
-          }          
           
           if (this.addedSet.has(parentNode.lastChild as Node)) {
             // jump instead of crawling nextSibling to nextSibling
@@ -280,7 +276,7 @@ export default class MutationBuffer {
 
       this.addedSet.delete(n); // don't re-iterate
 
-      if (!parentNode || parentId === -1) {
+      if (!parentNode || parentId === -1 || parentId === IGNORED_NODE) {
         missingParents.add(n); // ensure any added child nodes can also early-out
         continue;
       } else if (ancestorBad) {
