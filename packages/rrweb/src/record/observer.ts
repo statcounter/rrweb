@@ -465,7 +465,6 @@ function initMouseInteractionObserver({
         let hrefAttr: string | null = null;
         let src: string | null = null;
         let targetText: string | null = null;
-        let cEmissionEvent = emissionEvent as clickParam;
 
         let sig_target =
           htarget.closest &&
@@ -506,8 +505,8 @@ function initMouseInteractionObserver({
           const image_target = sig_target as HTMLImageElement;
           src = image_target.src;
         }
-        cEmissionEvent = {
-          ...cEmissionEvent,
+        emissionEvent = {
+          ...emissionEvent,
           ...(href && { href }),
           ...(hrefAttr && { hrefAttr }),
           ...(src && { src }),
@@ -515,15 +514,15 @@ function initMouseInteractionObserver({
           targetTagName: htarget.tagName,
         };
         if (htarget.classList && htarget.classList.length) {
-          cEmissionEvent = {
-            ...cEmissionEvent,
+          emissionEvent = {
+            ...emissionEvent,
             targetClasses: Array.from(htarget.classList),
           };
         }
 
         if (htarget !== sig_target) {
-          cEmissionEvent = {
-            ...cEmissionEvent,
+          emissionEvent = {
+            ...emissionEvent,
             sigTargetTagName: sig_target.tagName,
           };
         }
@@ -540,8 +539,8 @@ function initMouseInteractionObserver({
           if (htargetBound === null) {
             htargetBound = (htarget as Element).getBoundingClientRect();
           }
-          cEmissionEvent = {
-            ...cEmissionEvent,
+          emissionEvent = {
+            ...emissionEvent,
             targetSelector: targetSelector,
             targetW: Math.round(10 * htargetBound.width) / 10,
             targetH: Math.round(10 * htargetBound.height) / 10,
@@ -571,8 +570,8 @@ function initMouseInteractionObserver({
 
             // TODO: also reject tagNames and ids?
             if (targetSelector !== altTargetSelector) {
-              cEmissionEvent = {
-                ...cEmissionEvent,
+              emissionEvent = {
+                ...emissionEvent,
                 altTargetSelector: altTargetSelector,
               };
             }
@@ -604,8 +603,8 @@ function initMouseInteractionObserver({
                   targetSelector !== byIdTargetSelector &&
                   byIdTargetSelector !== altTargetSelector
                 ) {
-                  cEmissionEvent = {
-                    ...cEmissionEvent,
+                  emissionEvent = {
+                    ...emissionEvent,
                     byIdTargetSelector: byIdTargetSelector,
                   };
                 }
@@ -624,8 +623,8 @@ function initMouseInteractionObserver({
                 targetSelector !== structuralTargetSelector &&
                 structuralTargetSelector !== altTargetSelector
               ) {
-                cEmissionEvent = {
-                  ...cEmissionEvent,
+                emissionEvent = {
+                  ...emissionEvent,
                   structuralTargetSelector: structuralTargetSelector,
                 };
               }
@@ -638,8 +637,8 @@ function initMouseInteractionObserver({
               className: (cn) => !cn.match(/[0-9]/),
             });
             if (targetSelector !== noNumericTargetSelector) {
-              cEmissionEvent = {
-                ...cEmissionEvent,
+              emissionEvent = {
+                ...emissionEvent,
                 noNumericTargetSelector: noNumericTargetSelector,
               };
             }
@@ -664,7 +663,7 @@ function initMouseInteractionObserver({
                 others_with_alt.length === 1 &&
                 others_with_alt[0] === htarget
               ) {
-                cEmissionEvent[attr_name] = altAttributeSelector;
+                (emissionEvent as clickParam)[attr_name] = altAttributeSelector;
               }
             }
           });
