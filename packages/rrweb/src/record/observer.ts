@@ -467,8 +467,8 @@ function initMouseInteractionObserver({
         let targetText: string | null = null;
 
         let sig_target =
-          htarget.closest &&
-          htarget.closest(
+          event.target.closest &&
+          event.target.closest(
             'a[href],area[href],button,input[type="submit"],input[type="button"]',
           );
         if (!sig_target) {
