@@ -534,6 +534,7 @@ export type clickParam = mouseInteractionParam &
     targetTagName?: string;
     targetClasses?: string[];
     sigTargetTagName?: string;
+    sigTargetInternal?: boolean;
     altTargetSelector?: string;
     byIdTargetSelector?: string;
     structuralTargetSelector?: string;

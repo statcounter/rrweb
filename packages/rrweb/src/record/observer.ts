@@ -17,6 +17,7 @@ import {
   legacy_isTouchEvent,
   StyleSheetMirror,
   nowTimestamp,
+  closestElementOfNode,
 } from '../utils';
 import { patch } from '@rrweb/utils';
 import type { observerParam, MutationBufferParam } from '../types';
@@ -401,9 +402,11 @@ function initMouseInteractionObserver({
 
       let target;
       let htargetBound = null;
+      let significantEl: HTMLElement | null = null;
 
       if (!clientX) {
         target = getEventTarget(event) as Node;
+        significantEl = closestElementOfNode(target);
       } else {
         // copy of getEventTarget taking into account clientX/clientY
         // (this seems redundant now)
@@ -426,7 +429,12 @@ function initMouseInteractionObserver({
             const node = maybeNode as Node;
             if (node.nodeType === Node.DOCUMENT_NODE) {
               target = node;
+              significantEl = null;
               break;
+            }
+            if (!significantEl) {
+              // first parent in path, even if it isn't within bounds
+              significantEl = closestElementOfNode(node);
             }
             htargetBound = (node as HTMLElement).getBoundingClientRect();
             if (
@@ -441,6 +449,7 @@ function initMouseInteractionObserver({
           }
         } catch {
           target = event.target as Node;
+          significantEl = closestElementOfNode(target);
         }
       }
 
@@ -466,43 +475,48 @@ function initMouseInteractionObserver({
         let src: string | null = null;
         let targetText: string | null = null;
 
-        let sig_target =
-          event.target.closest &&
-          event.target.closest(
+        if (significantEl) {
+          significantEl = significantEl.closest(
             'a[href],area[href],button,input[type="submit"],input[type="button"]',
           );
-        if (!sig_target) {
-          sig_target = htarget;
+        }
+        if (!significantEl) {
+          significantEl = htarget;
+        } else if (htarget !== significantEl && htarget.contains(significantEl)) {
+          emissionEvent = {
+            ...emissionEvent,
+            sigTargetInternal: true,
+          };
         }
 
-        if (!sig_target.tagName) {
+        if (!significantEl.tagName) {
           // could be the #document element
-        } else if (sig_target.tagName.toLowerCase() === 'a') {
-          const a_target = sig_target as HTMLAnchorElement;
+        } else if (significantEl.tagName.toLowerCase() === 'a') {
+          const a_target = significantEl as HTMLAnchorElement;
           if (a_target.href) {
             href = a_target.href; // this is worse for matching as resolves to a full absolute URL
             hrefAttr = a_target.getAttribute('href');
           }
           targetText = a_target.innerText.substring(0, 40);
         } else if (
-          sig_target.tagName.toLowerCase() === 'area' &&
-          (sig_target as HTMLAreaElement).href
+          significantEl.tagName.toLowerCase() === 'area' &&
+          (significantEl as HTMLAreaElement).href
         ) {
-          const area_target = sig_target as HTMLAreaElement;
+          const area_target = significantEl as HTMLAreaElement;
           href = area_target.href; // this is worse for matching as resolves to a full absolute URL
           hrefAttr = area_target.getAttribute('href');
-        } else if (sig_target.tagName.toLowerCase() === 'button') {
-          const button_target = sig_target as HTMLButtonElement;
+        } else if (significantEl.tagName.toLowerCase() === 'button') {
+          const button_target = significantEl as HTMLButtonElement;
           targetText = button_target.innerText.substring(0, 40);
         } else if (
-          sig_target.tagName.toLowerCase() === 'input' &&
-          ((sig_target as HTMLInputElement).type === 'submit' ||
-            (sig_target as HTMLInputElement).type === 'button')
+          significantEl.tagName.toLowerCase() === 'input' &&
+          ((significantEl as HTMLInputElement).type === 'submit' ||
+            (significantEl as HTMLInputElement).type === 'button')
         ) {
-          const button_target = sig_target as HTMLInputElement;
+          const button_target = significantEl as HTMLInputElement;
           targetText = button_target.value.substring(0, 40);
-        } else if (sig_target.tagName.toLowerCase() === 'img') {
-          const image_target = sig_target as HTMLImageElement;
+        } else if (significantEl.tagName.toLowerCase() === 'img') {
+          const image_target = significantEl as HTMLImageElement;
           src = image_target.src;
         }
         emissionEvent = {
@@ -520,10 +534,10 @@ function initMouseInteractionObserver({
           };
         }
 
-        if (htarget !== sig_target) {
+        if (htarget !== significantEl) {
           emissionEvent = {
             ...emissionEvent,
-            sigTargetTagName: sig_target.tagName,
+            sigTargetTagName: significantEl.tagName,
           };
         }
 
