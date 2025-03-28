@@ -105,7 +105,7 @@ export type captureAssetsParam = Partial<{
   /**
    * capture audio irrespective of origin
    */
-  audio: boolean;    
+  audio: boolean;
   /**
    * capture stylesheets irrespective of origin (populated from inlineStylesheets setting)
    */
