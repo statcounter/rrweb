@@ -241,7 +241,7 @@ export default class MutationBuffer {
               ancestorBad = false;
             }
           }
-          
+
           if (this.addedSet.has(parentNode.lastChild as Node)) {
             // jump instead of crawling nextSibling to nextSibling
             n = parentNode.lastChild as Node;
@@ -361,7 +361,7 @@ export default class MutationBuffer {
         },
         cssCaptured,
         onAssetDetected: (asset: asset) => {
-          this.assetManager.capture(asset);
+          this.assetManager.capture(asset, now);
         },
       });
       if (sn) {
