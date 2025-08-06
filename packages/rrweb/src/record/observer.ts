@@ -493,9 +493,12 @@ function initMouseInteractionObserver({
           // could be the #document element
         } else if (significantEl.tagName.toLowerCase() === 'a') {
           const a_target = significantEl as HTMLAnchorElement;
-          if (a_target.href) {
-            href = a_target.href; // this is worse for matching as resolves to a full absolute URL
+          if (a_target.href && !a_target.href.startsWith('data:')) {
+            href = a_target.href.substring(0, 300); // this is worse for matching as resolves to a full absolute URL
             hrefAttr = a_target.getAttribute('href');
+            if (hrefAttr) {
+              hrefAttr = hrefAttr.substring(0, 300);
+            }
           }
           targetText = a_target.innerText.substring(0, 40);
         } else if (
@@ -503,8 +506,13 @@ function initMouseInteractionObserver({
           (significantEl as HTMLAreaElement).href
         ) {
           const area_target = significantEl as HTMLAreaElement;
-          href = area_target.href; // this is worse for matching as resolves to a full absolute URL
-          hrefAttr = area_target.getAttribute('href');
+          if (area_target.href && !area_target.href.startsWith('data:')) {
+            href = area_target.href.substring(0, 300); // this is worse for matching as resolves to a full absolute URL
+            hrefAttr = area_target.getAttribute('href');
+            if (hrefAttr) {
+              hrefAttr = hrefAttr.substring(0, 300);
+            }
+          }
         } else if (significantEl.tagName.toLowerCase() === 'button') {
           const button_target = significantEl as HTMLButtonElement;
           targetText = button_target.innerText.substring(0, 40);
@@ -517,7 +525,9 @@ function initMouseInteractionObserver({
           targetText = button_target.value.substring(0, 40);
         } else if (significantEl.tagName.toLowerCase() === 'img') {
           const image_target = significantEl as HTMLImageElement;
-          src = image_target.src;
+          if (!image_target.src.startsWith('data:')) {
+            src = image_target.src;
+          }
         }
         emissionEvent = {
           ...emissionEvent,
