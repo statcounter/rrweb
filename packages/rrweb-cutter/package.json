@@ -11,7 +11,9 @@
     "test": "vitest run",
     "prepublish": "tsc -noEmit && vite build",
     "lint": "yarn eslint src/**/*.ts",
-    "prune-events": "npx vite-node scripts/prune.ts --"
+    "prune-events": "npx vite-node scripts/prune.ts --",
+    "convert-vite": "npx vite-node scripts/convert.ts --",
+    "convert": "node scripts/convert.js"
   },
   "homepage": "https://github.com/rrweb-io/rrweb/tree/master/packages/rrweb-cutter#README.md",
   "bugs": {
