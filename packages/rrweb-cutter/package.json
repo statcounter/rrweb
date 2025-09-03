@@ -47,6 +47,8 @@
   },
   "dependencies": {
     "@rrweb/types": "^2.0.0-alpha.18",
+    "@aws-sdk/client-s3": "^3.835.0",
+    "aws-sdk": "^2.1692.0",
     "lodash.clonedeep": "^4.5.0",
     "rrdom": "^2.0.0-alpha.18",
     "rrweb-snapshot": "^2.0.0-alpha.18",
