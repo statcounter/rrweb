@@ -261,7 +261,16 @@ function record<T = eventWithTime>(
       e.type !== EventType.FullSnapshot &&
       !(
         e.type === EventType.IncrementalSnapshot &&
-        e.data.source === IncrementalSource.Mutation
+        [
+          IncrementalSource.Mutation,
+          IncrementalSource.MediaInteraction, // often automatic e.g. background video loop
+          IncrementalSource.StyleSheetRule,
+          IncrementalSource.CanvasMutation,
+          IncrementalSource.Font,
+          IncrementalSource.Log,
+          IncrementalSource.StyleDeclaration,
+          IncrementalSource.AdoptedStyleSheet,
+        ].includes(e.data.source)
       ) &&
       !(e.type === EventType.Custom && e.data.tag === 'window-hidden')
     ) {
