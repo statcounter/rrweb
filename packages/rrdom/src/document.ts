@@ -1,6 +1,6 @@
 import { NodeType as RRNodeType } from '@rrweb/types';
 import { parseCSSText, camelize, toCSSText } from './style';
-import { escapeHtmlText, escapeHtmlAttr } from './helpers';
+import { escapeHtmlText, escapeHtmlAttr } from './escape';
 
 export interface IRRNode {
   parentElement: IRRNode | null;
