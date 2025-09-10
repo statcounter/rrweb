@@ -23,7 +23,8 @@ const config = {
 
 const bucketName = 'sc-heatmap-snapshot';
 const pid = process.env.npm_config_project_id ? process.env.npm_config_project_id : (
-  process.env.npm_config_pid ? process.env.npm_config_pid : null)
+  process.env.npm_config_pid ? process.env.npm_config_pid : (
+    process.env.pid ? process.env.pid : null))
 
 async function main() {
 
@@ -53,10 +54,23 @@ async function main() {
 		}
   });
   let processed = 0;
-	for (const gzKey of zipfiles) {
+
+  let check_puppeteer = process.env.check_puppeteer;
+  if (process.env.filter_check) {
+    check_puppeteer = true;
+  }
+
+  for (const gzKey of zipfiles) {
+
+    if (process.env.filter_check) {
+      if (!gzKey.includes(process.env.filter_check)) {
+        continue;
+      }
+    }
+
 		let htmlKey = gzKey.replace('.gz', '') + '.html';
 		if (lastModified[htmlKey]) {
-			if (lastModified[htmlKey].getTime() < lastModified[gzKey].getTime()) {
+      if (lastModified[htmlKey].getTime() < lastModified[gzKey].getTime() || check_puppeteer) {
 				console.log('Reprocessing ' + gzKey);
 			} else {
         console.log('Already processed ' + gzKey);
@@ -86,18 +100,17 @@ async function main() {
     let st = performance.now();
     const html = await processViaSyncReplayer(jsonStr, gzKey);
     const d1 = performance.now() - st;
-    if (true) {
+    if (check_puppeteer) {
       st = performance.now();
       const html2 = (await processViaPuppeteer(jsonStr, gzKey)).replace(/\s?rrweb-paused/g, '').replace('<style></style><head', '<head');
       const d2 = performance.now() - st;
+      console.log(`${Math.round(100*d1/d2)}% of slower puppeteer time (${Math.round(d1/1000, 2)}s vs. ${Math.round(d2/1000, 2)}s)`)
       if (html !== html2 && html.replace(/[\n\s]/g, '') !== html2.replace(/[\n\s]/g, '')) {
         console.log('got diff html ' + gzKey);
         await fs.writeFile(`./payload.json`, jsonData);
         await fs.writeFile(`./virtual-diff.html`, html);
         await fs.writeFile(`./puppeteer-diff.html`, html2);
         return;
-      } else {
-        console.log(`${round(100*d1/d2)}% of slower puppeteer time`)
       }
     }
     processed += 1;
