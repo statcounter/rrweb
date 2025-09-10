@@ -97,7 +97,13 @@ async function main() {
     //console.log('got jsonStr ' + jsonStr.length + ' ' + jsonStr.substring(0, 40));
 
     let st = performance.now();
-    const html = await processViaSyncReplayer(jsonStr, gzKey);
+    let html;
+    try {
+      html = await processViaSyncReplayer(jsonStr, gzKey);
+    } catch (exc) {
+      console.log('error: ' + exc);
+      continue;
+    }
     const d1 = performance.now() - st;
     if (check_puppeteer) {
       st = performance.now();
