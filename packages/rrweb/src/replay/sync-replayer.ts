@@ -153,7 +153,7 @@ export class SyncReplayer {
     // maybe we can cache it for performance optimization
     const firstMeta = this.events.find((e) => e.type === EventType.Meta);
     if (firstMeta) {
-      const { width, height } = firstMeta.data;
+      const { width, height } = (firstMeta as metaEvent).data;
       setTimeout(() => {
         this.emitter.emit(ReplayerEvents.Resize, {
           width,
@@ -1029,7 +1029,7 @@ export class SyncReplayer {
                 targetEl.style.setProperty(s, svp[0], svp[1]);
               } else {
                 const svs = styleValues[s];
-                targetEl.style.setProperty(s, svs);
+                targetEl.style.setProperty(s, svs as string);
               }
             }
           }
