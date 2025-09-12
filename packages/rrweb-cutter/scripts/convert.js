@@ -48,8 +48,8 @@ async function main() {
     lastModified[finfo.Key] = finfo.LastModified;  // Date object
     if (finfo.Key.endsWith('.gz')) {
       zipfiles.push(finfo.Key);
-    } else {
-      console.log(finfo.Key);
+    } else if (!finfo.Key.endsWith('.html')) {
+      console.log('Unexpected file: ' + finfo.Key);
     }
   });
   let processed = 0;
