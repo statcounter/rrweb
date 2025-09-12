@@ -61,15 +61,18 @@ async function main() {
 
   for (const gzKey of zipfiles) {
 
-    if (process.env.filter_check) {
-      if (!gzKey.includes(process.env.filter_check)) {
-        continue;
-      }
+    if (process.env.filter_check && !gzKey.includes(process.env.filter_check)) {
+      continue;
+    } else if (process.env.filter && !gzKey.includes(process.env.filter)) {
+      continue;
     }
 
     let htmlKey = gzKey.replace('.gz', '') + '.html';
     if (lastModified[htmlKey]) {
-      if (lastModified[htmlKey].getTime() < lastModified[gzKey].getTime() || check_puppeteer) {
+      const outputLastModified = lastModified[htmlKey].getTime()
+      if (outputLastModified < lastModified[gzKey].getTime() ||
+          // (true || outputLastModified < Date.parse('2025-09-12')) ||  // a way to manually refresh after this codebase changes
+          check_puppeteer) {
         console.log('Reprocessing ' + gzKey);
       } else {
         console.log('Already processed ' + gzKey);
