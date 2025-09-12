@@ -159,7 +159,7 @@ async function processViaSyncReplayer(jsonData, gzKey) {
       height: 3220, // longer viewport in the hope of thwarting css based lazyload
     };
   }
-  const replayer = new SyncReplayer(JSON.parse(jsonData));
+  const replayer = new SyncReplayer(JSON.parse(jsonData.replace(/rr_captured_href/g, 'href').replace(/xreplaced-meta/g, 'meta')));
   replayer.play();
   const jsddocument = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>', {
     url: "http://localhost",
