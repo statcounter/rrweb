@@ -5,6 +5,8 @@ import {
   type PlayerMachineState,
   type SpeedMachineState,
 } from './replay';
+import { SyncReplayer } from './replay/sync-replayer';
+
 import canvasMutation from './replay/canvas';
 import { _mirror } from './utils';
 import * as utils from './utils';
@@ -36,6 +38,7 @@ export {
   freezePage,
   takeFullSnapshot,
   Replayer,
+  SyncReplayer,
   type playerConfig,
   type PlayerMachineState,
   type SpeedMachineState,
