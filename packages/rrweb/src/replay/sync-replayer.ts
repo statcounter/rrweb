@@ -232,12 +232,10 @@ export class SyncReplayer {
         promises.push(this.assetManager.add(event));
       }
     }
-    console.log('promises.length', promises.length);
     if (
       this.assetManager.expectedAssets !== null &&
       this.assetManager.expectedAssets.size
     ) {
-      console.log('back for more', this.assetManager.expectedAssets);
       // also check outside of the expected window between fullsnapshots
       for (const event of this.events) {
         if (
