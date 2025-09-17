@@ -5,7 +5,7 @@ import { promisify } from 'node:util';
 //import rrdomNodejs from 'rrdom-nodejs';
 //import rrdom from 'rrdom';
 //import rrtypes from '@rrweb/types';
-import { JSDOM } from 'jsdom';
+//import { JSDOM } from 'jsdom';
 import { EventType, SyncReplayer } from 'rrweb';
 //import { SyncReplayer } from './packages/rrweb/src/replay/sync-replayer';
 import puppeteer from 'puppeteer';
@@ -164,10 +164,6 @@ async function processViaSyncReplayer(jsonData, gzKey) {
   }
   const replayer = new SyncReplayer(JSON.parse(jsonData.replace(/rr_captured_href/g, 'href').replace(/xreplaced-meta/g, 'meta')));
   replayer.play();
-  const jsddocument = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>', {
-    url: "http://localhost",
-    //pretendToBeVisual: true,
-  });
 
   const replayerHandler = {
     mirror: replayer.getMirror(),
@@ -195,7 +191,12 @@ async function processViaSyncReplayer(jsonData, gzKey) {
   };
 
   return replayer.virtualDom.outerHTML;
-/*
+  /*
+  const jsddocument = new JSDOM('<!DOCTYPE html><html><head></head><body></body></html>', {
+    url: "http://localhost",
+    //pretendToBeVisual: true,
+  });
+
   diff(jsddocument, replayer.virtualDom, replayerHandler, replayer.getMirror());
   console.log( jsddocument.serialize());
 
