@@ -6,6 +6,7 @@ import {
   createCache,
   Mirror,
 } from 'rrweb-snapshot';
+import AssetManager from './asset-manager';
 import type {
   attributes,
   serializedElementNodeWithId,
@@ -114,6 +115,8 @@ export class SyncReplayer {
 
   private newDocumentQueue: addedNodeMutation[] = [];
 
+  private assetManager: AssetManager;
+
   constructor(
     events: Array<eventWithTime | string>,
     config?: Partial<playerConfig>,
@@ -121,6 +124,12 @@ export class SyncReplayer {
     if (!config?.liveMode && events.length < 2) {
       throw new Error('Replayer need at least 2 events.');
     }
+
+    this.assetManager = new AssetManager({
+      liveMode: false,
+      cache: this.cache,
+    });
+
     this.events = events
       .map((e) => {
         if (config && config.unpackFn) {
@@ -198,6 +207,46 @@ export class SyncReplayer {
 
   public getMirror() {
     return this.mirror;
+  }
+
+  private async preloadAllAssets(
+    fullSnapshot: fullSnapshotEvent & { timestamp: number },
+  ): Promise<void[]> {
+    const promises: Promise<void>[] = [];
+    if (fullSnapshot.data.capturedAssetStatuses) {
+      fullSnapshot.data.capturedAssetStatuses.forEach((status) => {
+        if (this.assetManager.expectedAssets === null) {
+          this.assetManager.expectedAssets = new Set();
+        }
+        this.assetManager.expectedAssets.add(status.url);
+      });
+    }
+    for (const event of this.events) {
+      if (event.timestamp < fullSnapshot.timestamp) continue;
+      if (
+        event.type === EventType.Meta &&
+        event.timestamp !== fullSnapshot.timestamp
+      )
+        break;
+      if (event.type === EventType.Asset) {
+        promises.push(this.assetManager.add(event));
+      }
+    }
+    console.log('promises.length', promises.length);
+    if (this.assetManager.expectedAssets !== null &&
+      this.assetManager.expectedAssets.size) {
+      console.log('back for more', this.assetManager.expectedAssets);
+      // also check outside of the expected window between fullsnapshots
+      for (const event of this.events) {
+        if (event.type === EventType.Asset && this.assetManager.expectedAssets.has(event.data.url)) {
+          promises.push(this.assetManager.add(event));
+          if (!this.assetManager.expectedAssets.size) {
+            break;
+          }
+        }
+      }
+    }
+    return Promise.all(promises);
   }
 
   public play(
@@ -302,13 +351,14 @@ export class SyncReplayer {
         break;
       case EventType.FullSnapshot:
         castFn = () => {
+          this.preloadAllAssets(event);
           this.rebuildFullSnapshot(event);
           this.virtualDom.scrollTop = event.data.initialOffset.top;
           this.virtualDom.scrollLeft = event.data.initialOffset.left;
         };
         break;
       case EventType.Asset:
-        throw new Error('asset')
+        // pass, handled by fullsnapshot
         break;
       case EventType.IncrementalSnapshot:
         castFn = () => {
@@ -373,6 +423,7 @@ export class SyncReplayer {
       afterAppend,
       cache: this.cache,
       mirror: this.mirror as unknown as Mirror,
+      assetManager: this.assetManager,
     });
     afterAppend(this.virtualDom as unknown as Document, event.data.node.id);
 
