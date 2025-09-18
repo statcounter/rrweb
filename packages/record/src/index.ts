@@ -1,13 +1,13 @@
-import { record, getWindowScroll, getWindowHeight, getWindowWidth } from 'rrweb';
-
 import {
-  EventType,
-  IncrementalSource,
-  MouseInteractions,
-} from '@rrweb/types';
+  record,
+  getWindowScroll,
+  getWindowHeight,
+  getWindowWidth,
+} from 'rrweb';
 
+import { EventType, IncrementalSource, MouseInteractions } from '@rrweb/types';
 
-export { 
+export {
   EventType,
   IncrementalSource,
   MouseInteractions,

@@ -482,7 +482,10 @@ function initMouseInteractionObserver({
         }
         if (!significantEl) {
           significantEl = htarget;
-        } else if (htarget !== significantEl && htarget.contains(significantEl)) {
+        } else if (
+          htarget !== significantEl &&
+          htarget.contains(significantEl)
+        ) {
           emissionEvent = {
             ...emissionEvent,
             sigTargetInternal: true,

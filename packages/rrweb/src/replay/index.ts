@@ -1098,11 +1098,16 @@ export class Replayer {
         promises.push(this.assetManager.add(event));
       }
     }
-    if (this.assetManager.expectedAssets !== null &&
-      this.assetManager.expectedAssets.size) {
+    if (
+      this.assetManager.expectedAssets !== null &&
+      this.assetManager.expectedAssets.size
+    ) {
       // also check outside of the expected window between fullsnapshots
       for (const event of this.service.state.context.events) {
-        if (event.type === EventType.Asset && this.assetManager.expectedAssets.has(event.data.url)) {
+        if (
+          event.type === EventType.Asset &&
+          this.assetManager.expectedAssets.has(event.data.url)
+        ) {
           promises.push(this.assetManager.add(event));
           if (!this.assetManager.expectedAssets.size) {
             break;
@@ -1921,22 +1926,35 @@ export class Replayer {
                   attributeName.substring('rr_captured_'.length),
                   value,
                 );
-              } else if (attributeName === 'rr_onErrorSrc' || attributeName === 'rr_onErrorSrcset') {
+              } else if (
+                attributeName === 'rr_onErrorSrc' ||
+                attributeName === 'rr_onErrorSrcset'
+              ) {
                 // pass
               } else {
-                if (targetEl.tagName === 'IMG' && attributeName === 'src' && mutation.attributes['rr_onErrorSrc']) {
+                if (
+                  targetEl.tagName === 'IMG' &&
+                  attributeName === 'src' &&
+                  mutation.attributes['rr_onErrorSrc']
+                ) {
                   // set onerror before setting src
-                  const rr_onErrorSrc = mutation.attributes['rr_onErrorSrc'] as string;
+                  const rr_onErrorSrc = mutation.attributes[
+                    'rr_onErrorSrc'
+                  ] as string;
                   let rr_onErrorSrcset: string | false = false;
                   if (mutation.attributes['rr_onErrorSrcset']) {
-                    rr_onErrorSrcset = mutation.attributes['rr_onErrorSrcset'] as string;
+                    rr_onErrorSrcset = mutation.attributes[
+                      'rr_onErrorSrcset'
+                    ] as string;
                   }
                   const img = targetEl as HTMLImageElement;
                   const cacheValue = errorSrcCache.get(value);
                   if (cacheValue) {
                     value = cacheValue;
                     if (mutation.attributes['srcset']) {
-                      const srcsetCache = errorSrcCache.get(mutation.attributes['srcset'] as string);
+                      const srcsetCache = errorSrcCache.get(
+                        mutation.attributes['srcset'] as string,
+                      );
                       if (srcsetCache) {
                         img.srcset = srcsetCache;
                       }

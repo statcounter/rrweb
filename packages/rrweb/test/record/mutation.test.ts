@@ -132,7 +132,7 @@ describe('mutation', () => {
   });
 
   it('add root first', async () => {
-    await setup('mutation.html');    
+    await setup('mutation.html');
     await page.evaluate(() => {
       const d1 = document.createElement('div');
       d1.id = 'd1';
@@ -279,7 +279,7 @@ describe('mutation', () => {
 
   it('siblings added in idleCallback', async () => {
     await setup('mutation.html');
-    await page.evaluate(() => {      
+    await page.evaluate(() => {
       document.body.childNodes.forEach((cn) => document.body.removeChild(cn)); // clear out text nodes created by server
       document.body.prepend(document.createElement('div'));
       requestAnimationFrame(() => {
@@ -294,7 +294,7 @@ describe('mutation', () => {
     );
     await assertSnapshot(mutations, true);
   });
-  
+
   it('ignored firstchild comment already there', async () => {
     await setup('mutation-already-there.html');
     await page.evaluate(() => {
@@ -302,8 +302,8 @@ describe('mutation', () => {
       document.getElementById('with-comment').append(siblingDiv);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
@@ -313,12 +313,14 @@ describe('mutation', () => {
     await page.evaluate(() => {
       const siblingDiv = document.createElement('div');
       const siblingDiv2 = document.createElement('div');
-      document.getElementById('with-comment').insertAdjacentElement('afterbegin', siblingDiv);
+      document
+        .getElementById('with-comment')
+        .insertAdjacentElement('afterbegin', siblingDiv);
       document.getElementById('with-comment').append(siblingDiv2);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type)
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
@@ -327,11 +329,13 @@ describe('mutation', () => {
     await setup('mutation-already-there.html');
     await page.evaluate(() => {
       const siblingDiv = document.createElement('div');
-      document.getElementById('with-comment').insertAdjacentElement('afterbegin', siblingDiv);      
+      document
+        .getElementById('with-comment')
+        .insertAdjacentElement('afterbegin', siblingDiv);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type)
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
@@ -347,8 +351,8 @@ describe('mutation', () => {
       d1.append(siblingDiv);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type)
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
@@ -366,8 +370,8 @@ describe('mutation', () => {
       d1.append(siblingDiv2);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type)
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
@@ -383,10 +387,9 @@ describe('mutation', () => {
       d1.insertAdjacentElement('afterbegin', siblingDiv);
     });
     await waitForRAF(page);
-    const mutations = events.filter(
-      (e) => [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type)
+    const mutations = events.filter((e) =>
+      [EventType.IncrementalSnapshot, EventType.FullSnapshot].includes(e.type),
     );
     await assertSnapshot(mutations, true);
   });
-
 });

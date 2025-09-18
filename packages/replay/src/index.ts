@@ -6,11 +6,7 @@ import {
 } from 'rrweb';
 import 'rrweb/dist/style.css';
 
-import {
-  EventType,
-  IncrementalSource,
-  MouseInteractions,
-} from '@rrweb/types';
+import { EventType, IncrementalSource, MouseInteractions } from '@rrweb/types';
 
 export {
   Replayer,

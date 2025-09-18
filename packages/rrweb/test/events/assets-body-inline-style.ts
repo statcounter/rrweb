@@ -16,72 +16,70 @@ const events: eventWithTime[] = [
       node: {
         type: 0,
         childNodes: [
-          { type: 1, name: "html", publicId: "", systemId: "", id: 2 },
+          { type: 1, name: 'html', publicId: '', systemId: '', id: 2 },
           {
             type: 2,
-            tagName: "html",
-            attributes: { lang: "en" },
+            tagName: 'html',
+            attributes: { lang: 'en' },
             childNodes: [
               {
                 type: 2,
-                tagName: "head",
+                tagName: 'head',
                 attributes: {},
-                childNodes: [
-                ],
+                childNodes: [],
                 id: 4,
               },
               {
                 type: 2,
-                tagName: "body",
+                tagName: 'body',
                 attributes: {},
                 childNodes: [
-
                   {
-                    tagName: "style",
+                    tagName: 'style',
                     attributes: {
-                      rr_css_text: "https://example.com/#rr_style_el:1"
+                      rr_css_text: 'https://example.com/#rr_style_el:1',
                     },
                     childNodes: [
                       {
                         type: 3,
-                        textContent: "",
-                        id: 6
-                      }
+                        textContent: '',
+                        id: 6,
+                      },
                     ],
                     id: 5,
-                    type: 2
+                    type: 2,
                   },
                   {
-                    tagName: "div",
+                    tagName: 'div',
                     attributes: {
-                      class: "back-btn__wrapper"
+                      class: 'back-btn__wrapper',
                     },
                     childNodes: [
                       {
                         type: 3,
-                        textContent: "\n  ",
-                        id: 9
+                        textContent: '\n  ',
+                        id: 9,
                       },
                       {
-                        tagName: "a",
+                        tagName: 'a',
                         attributes: {
-                          class: "back-btn",
-                          href: "https://example.com/#back",
+                          class: 'back-btn',
+                          href: 'https://example.com/#back',
                         },
                         childNodes: [
                           {
-                          type: 3,
-                            textContent: "Back",
-                            id: 11
+                            type: 3,
+                            textContent: 'Back',
+                            id: 11,
                           },
                         ],
                         id: 10,
-                        type: 2
+                        type: 2,
                       },
                     ],
                     id: 8,
-                    type: 2
-                  }
+                    type: 2,
+                  },
                 ],
                 id: 7,
               },
@@ -94,9 +92,9 @@ const events: eventWithTime[] = [
       initialOffset: { left: 0, top: 0 },
       capturedAssetStatuses: [
         {
-          url: "https://example.com/#rr_style_el:1",
-          status: "captured",
-        }        
+          url: 'https://example.com/#rr_style_el:1',
+          status: 'captured',
+        },
       ],
     },
     timestamp: 125,
@@ -104,16 +102,16 @@ const events: eventWithTime[] = [
   {
     type: EventType.Asset,
     data: {
-      url: "https://example.com/#rr_style_el:1",
+      url: 'https://example.com/#rr_style_el:1',
       payload: {
-        rr_type: "CssText",
+        rr_type: 'CssText',
         cssTexts: [
-          ".back-btn { background: rgb(0, 255, 0); padding: 10px 7px 4px 6px; }}"
-        ]
-      }
+          '.back-btn { background: rgb(0, 255, 0); padding: 10px 7px 4px 6px; }}',
+        ],
+      },
     },
     timestamp: 127,
-  }
+  },
 ];
 
 export default events;
