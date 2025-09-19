@@ -14,17 +14,17 @@ import { diff } from 'rrdom';
 
 // Configure AWS SDK
 const config = {
-  region: process.env.aws_region,
+  region: process.env.AWS_REGION,
   credentials: {
-    accessKeyId: process.env.aws_access_key_id,
-    secretAccessKey: process.env.aws_secret_access_key,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   }
 };
 
 const bucketName = 'sc-heatmap-snapshot';
 const pid = process.env.npm_config_project_id ? process.env.npm_config_project_id : (
   process.env.npm_config_pid ? process.env.npm_config_pid : (
-    process.env.pid ? process.env.pid : null))
+    process.env.PID ? process.env.PID : null))
 
 async function main() {
   //const client = new S3Client({region: 'us-west-2'});
@@ -54,16 +54,16 @@ async function main() {
   });
   let processed = 0;
 
-  let check_puppeteer = process.env.check_puppeteer;
-  if (process.env.filter_check) {
+  let check_puppeteer = process.env.CHECK_PUPPETEER;
+  if (process.env.FILTER_CHECK) {
     check_puppeteer = true;
   }
 
   for (const gzKey of zipfiles) {
 
-    if (process.env.filter_check && !gzKey.includes(process.env.filter_check)) {
+    if (process.env.FILTER_CHECK && !gzKey.includes(process.env.FILTER_CHECK)) {
       continue;
-    } else if (process.env.filter && !gzKey.includes(process.env.filter)) {
+    } else if (process.env.FILTER && !gzKey.includes(process.env.FILTER)) {
       continue;
     }
 
