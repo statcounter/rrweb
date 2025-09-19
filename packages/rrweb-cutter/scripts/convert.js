@@ -95,6 +95,11 @@ async function main() {
 
     const unzip = promisify(gunzip);
     const jsonData = await unzip(bytePayload);
+
+    if (check_puppeteer) {
+      await fs.writeFile(`./payload.json`, jsonData);
+    }
+
     //console.log('got jsonData ' + jsonData.length);
     const jsonStr = jsonData.toString();
     //console.log('got jsonStr ' + jsonStr.length + ' ' + jsonStr.substring(0, 40));
@@ -115,7 +120,6 @@ async function main() {
       console.log(`${Math.round(100*d1/d2)}% of slower puppeteer time (${Math.round(d1/1000, 2)}s vs. ${Math.round(d2/1000, 2)}s)`)
       if (html !== html2 && html.replace(/[\n\s]/g, '') !== html2.replace(/[\n\s]/g, '')) {
         console.log('got diff html ' + gzKey);
-        await fs.writeFile(`./payload.json`, jsonData);
         await fs.writeFile(`./virtual-diff.html`, html);
         await fs.writeFile(`./puppeteer-diff.html`, html2);
         return;
